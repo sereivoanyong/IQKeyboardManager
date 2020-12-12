@@ -31,21 +31,13 @@ internal extension IQKeyboardManager {
     @objc func willChangeStatusBarOrientation(_ notification: Notification) {
 
         let currentStatusBarOrientation: UIInterfaceOrientation
-        #if swift(>=5.1)
         if #available(iOS 13, *) {
             currentStatusBarOrientation = keyWindow()?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.unknown
         } else {
             currentStatusBarOrientation = UIApplication.shared.statusBarOrientation
         }
-        #else
-        currentStatusBarOrientation = UIApplication.shared.statusBarOrientation
-        #endif
 
-        #if swift(>=4.2)
-        let UIApplicationStatusBarOrientationUserInfoKey = UIApplication.statusBarOrientationUserInfoKey
-        #endif
-
-        guard let statusBarOrientation = notification.userInfo?[UIApplicationStatusBarOrientationUserInfoKey] as? Int, currentStatusBarOrientation.rawValue != statusBarOrientation else {
+        guard let statusBarOrientation = notification.userInfo?[UIApplication.statusBarOrientationUserInfoKey] as? Int, currentStatusBarOrientation.rawValue != statusBarOrientation else {
             return
         }
 

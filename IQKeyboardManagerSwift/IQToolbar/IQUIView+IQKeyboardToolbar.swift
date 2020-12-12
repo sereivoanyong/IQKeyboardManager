@@ -28,11 +28,7 @@ import UIKit
  */
 @objc public class IQBarButtonItemConfiguration: NSObject {
 
-    #if swift(>=4.2)
-    public typealias  UIBarButtonSystemItem = UIBarButtonItem.SystemItem
-    #endif
-
-    @objc public init(barButtonSystemItem: UIBarButtonSystemItem, action: Selector) {
+    @objc public init(barButtonSystemItem: UIBarButtonItem.SystemItem, action: Selector) {
         self.barButtonSystemItem = barButtonSystemItem
         self.image = nil
         self.title = nil
@@ -56,7 +52,7 @@ import UIKit
         super.init()
     }
 
-    public let barButtonSystemItem: UIBarButtonSystemItem?    //System Item to be used to instantiate bar button.
+    public let barButtonSystemItem: UIBarButtonItem.SystemItem?    //System Item to be used to instantiate bar button.
 
     @objc public let image: UIImage?    //Image to show on bar button item if it's not a system item.
 

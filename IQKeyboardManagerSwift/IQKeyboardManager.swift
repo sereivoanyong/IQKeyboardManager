@@ -282,16 +282,16 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     @param didEndEditingNotificationName This should be identical to UITextViewTextDidEndEditingNotification
     */
 
-    @objc public func registerTextFieldViewClass(_ aClass: UIView.Type, didBeginEditingNotificationName: String, didEndEditingNotificationName: String) {
+    @objc public func registerTextFieldViewClass(_ aClass: UIView.Type, didBeginEditingNotification: Notification.Name, didEndEditingNotification: Notification.Name) {
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldViewDidBeginEditing(_:)), name: Notification.Name(rawValue: didBeginEditingNotificationName), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldViewDidEndEditing(_:)), name: Notification.Name(rawValue: didEndEditingNotificationName), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldViewDidBeginEditing(_:)), name: didBeginEditingNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldViewDidEndEditing(_:)), name: didEndEditingNotification, object: nil)
     }
 
-    @objc public func unregisterTextFieldViewClass(_ aClass: UIView.Type, didBeginEditingNotificationName: String, didEndEditingNotificationName: String) {
+    @objc public func unregisterTextFieldViewClass(_ aClass: UIView.Type, didBeginEditingNotification: Notification.Name, didEndEditingNotification: Notification.Name) {
 
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: didBeginEditingNotificationName), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: didEndEditingNotificationName), object: nil)
+        NotificationCenter.default.removeObserver(self, name: didBeginEditingNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: didEndEditingNotification, object: nil)
     }
 
     /**************************************************************************************/
@@ -353,7 +353,6 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
 
             var originalKeyWindow: UIWindow?
 
-            #if swift(>=5.1)
             if #available(iOS 13, *) {
                 originalKeyWindow = UIApplication.shared.connectedScenes
                     .compactMap { $0 as? UIWindowScene }
@@ -362,9 +361,6 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
             } else {
                 originalKeyWindow = UIApplication.shared.keyWindow
             }
-            #else
-            originalKeyWindow = UIApplication.shared.keyWindow
-            #endif
 
             //If original key window is not nil and the cached keywindow is also not original keywindow then changing keywindow.
             if let originalKeyWindow = originalKeyWindow {

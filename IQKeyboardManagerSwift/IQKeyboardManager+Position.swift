@@ -202,16 +202,11 @@ public extension IQKeyboardManager {
         }
 
         let statusBarHeight: CGFloat
-
-        #if swift(>=5.1)
         if #available(iOS 13, *) {
             statusBarHeight = window.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         } else {
             statusBarHeight = UIApplication.shared.statusBarFrame.height
         }
-        #else
-        statusBarHeight = UIApplication.shared.statusBarFrame.height
-        #endif
 
         let navigationBarAreaHeight: CGFloat = statusBarHeight + ( rootController.navigationController?.navigationBar.frame.height ?? 0)
         let layoutAreaHeight: CGFloat = rootController.view.layoutMargins.bottom
@@ -307,15 +302,11 @@ public extension IQKeyboardManager {
                     startingContentInsets = scrollView.contentInset
                     startingContentOffset = scrollView.contentOffset
 
-                    #if swift(>=5.1)
                     if #available(iOS 11.1, *) {
                         startingScrollIndicatorInsets = scrollView.verticalScrollIndicatorInsets
                     } else {
                         startingScrollIndicatorInsets = scrollView.scrollIndicatorInsets
                     }
-                    #else
-                    _startingScrollIndicatorInsets = scrollView.scrollIndicatorInsets
-                    #endif
                 }
 
                 showLog("Saving ScrollView New contentInset: \(startingContentInsets) and contentOffset: \(startingContentOffset)")
@@ -326,15 +317,11 @@ public extension IQKeyboardManager {
             startingContentInsets = unwrappedSuperScrollView.contentInset
             startingContentOffset = unwrappedSuperScrollView.contentOffset
 
-            #if swift(>=5.1)
             if #available(iOS 11.1, *) {
                 startingScrollIndicatorInsets = unwrappedSuperScrollView.verticalScrollIndicatorInsets
             } else {
                 startingScrollIndicatorInsets = unwrappedSuperScrollView.scrollIndicatorInsets
             }
-            #else
-            _startingScrollIndicatorInsets = unwrappedSuperScrollView.scrollIndicatorInsets
-            #endif
 
             showLog("Saving ScrollView contentInset: \(startingContentInsets) and contentOffset: \(startingContentOffset)")
         }
@@ -491,12 +478,10 @@ public extension IQKeyboardManager {
                 bottomInset = max(startingContentInsets.bottom, bottomInset)
                 bottomScrollIndicatorInset = max(startingScrollIndicatorInsets.bottom, bottomScrollIndicatorInset)
 
-                #if swift(>=4.0)
                 if #available(iOS 11, *) {
                     bottomInset -= lastScrollView.safeAreaInsets.bottom
                     bottomScrollIndicatorInset -= lastScrollView.safeAreaInsets.bottom
                 }
-                #endif
 
                 var movedInsets = lastScrollView.contentInset
                 movedInsets.bottom = bottomInset
@@ -509,15 +494,11 @@ public extension IQKeyboardManager {
 
                         var newScrollIndicatorInset: UIEdgeInsets
 
-                        #if swift(>=5.1)
                         if #available(iOS 11.1, *) {
                             newScrollIndicatorInset = lastScrollView.verticalScrollIndicatorInsets
                         } else {
                             newScrollIndicatorInset = lastScrollView.scrollIndicatorInsets
                         }
-                        #else
-                        newScrollIndicatorInset = lastScrollView.scrollIndicatorInsets
-                        #endif
 
                         newScrollIndicatorInset.bottom = bottomScrollIndicatorInset
                         lastScrollView.scrollIndicatorInsets = newScrollIndicatorInset
@@ -553,15 +534,11 @@ public extension IQKeyboardManager {
                 if !self.isTextViewContentInsetChanged {
                     self.startingTextViewContentInsets = textView.contentInset
 
-                    #if swift(>=5.1)
                     if #available(iOS 11.1, *) {
                         self.startingTextViewScrollIndicatorInsets = textView.verticalScrollIndicatorInsets
                     } else {
                         self.startingTextViewScrollIndicatorInsets = textView.scrollIndicatorInsets
                     }
-                    #else
-                    self.startingTextViewScrollIndicatorInsets = textView.scrollIndicatorInsets
-                    #endif
                 }
 
                 self.isTextViewContentInsetChanged = true
@@ -569,11 +546,9 @@ public extension IQKeyboardManager {
                 var newContentInset = textView.contentInset
                 newContentInset.bottom = textView.frame.size.height-textViewHeight
 
-                #if swift(>=4.0)
                 if #available(iOS 11, *) {
                     newContentInset.bottom -= textView.safeAreaInsets.bottom
                 }
-                #endif
 
                 if textView.contentInset != newContentInset {
                     self.showLog("\(textFieldView) Old UITextView.contentInset: \(textView.contentInset) New UITextView.contentInset: \(newContentInset)")

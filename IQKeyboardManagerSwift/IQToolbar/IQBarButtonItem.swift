@@ -66,37 +66,14 @@ open class IQBarButtonItem: UIBarButtonItem {
     @objc override open var tintColor: UIColor? {
         didSet {
 
-            #if swift(>=4.2)
-            typealias  NSAttributedStringKey = NSAttributedString.Key
-            #endif
+            var textAttributes = [NSAttributedString.Key: Any]()
+            textAttributes[.foregroundColor] = tintColor
 
-            #if swift(>=4)
-            var textAttributes = [NSAttributedStringKey: Any]()
-            let foregroundColorKey = NSAttributedStringKey.foregroundColor
-            #else
-            var textAttributes = [String: Any]()
-            let foregroundColorKey = NSForegroundColorAttributeName
-            #endif
-
-            textAttributes[foregroundColorKey] = tintColor
-
-            #if swift(>=4)
-
-                if let attributes = titleTextAttributes(for: .normal) {
-                    for (key, value) in attributes {
-                        #if swift(>=4.2)
-                        textAttributes[key] = value
-                        #else
-                        textAttributes[NSAttributedStringKey.init(key)] = value
-                        #endif
-                    }
+            if let attributes = titleTextAttributes(for: .normal) {
+                for (key, value) in attributes {
+                    textAttributes[key] = value
                 }
-
-            #else
-                if let attributes = titleTextAttributes(for: .normal) {
-                    textAttributes = attributes
-                }
-            #endif
+            }
 
             setTitleTextAttributes(textAttributes, for: .normal)
         }

@@ -116,11 +116,7 @@ class SettingsViewController: UITableViewController, OptionsViewControllerDelega
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        #if swift(>=4.2)
         return UITableView.automaticDimension
-        #else
-        return UITableViewAutomaticDimension
-        #endif
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {

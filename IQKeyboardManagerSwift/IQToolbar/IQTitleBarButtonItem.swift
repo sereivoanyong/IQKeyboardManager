@@ -67,11 +67,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
             if let color = selectableTitleColor {
                 titleButton?.setTitleColor(color, for: .normal)
             } else {
-                #if swift(>=5.1)
                 titleButton?.setTitleColor(UIColor.systemBlue, for: .normal)
-                #else
-                titleButton?.setTitleColor(UIColor(red: 0.0, green: 0.5, blue: 1.0, alpha: 1), for: .normal)
-                #endif
             }
         }
     }
@@ -113,11 +109,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
         titleButton?.isEnabled = false
         titleButton?.titleLabel?.numberOfLines = 3
         titleButton?.setTitleColor(UIColor.lightGray, for: .disabled)
-        #if swift(>=5.1)
         titleButton?.setTitleColor(UIColor.systemBlue, for: .normal)
-        #else
-        titleButton?.setTitleColor(UIColor(red: 0.0, green: 0.5, blue: 1.0, alpha: 1), for: .normal)
-        #endif
         titleButton?.backgroundColor = UIColor.clear
         titleButton?.titleLabel?.textAlignment = .center
         titleButton?.setTitle(title, for: .normal)
@@ -127,13 +119,8 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
 
         if #available(iOS 11, *) {
 
-            #if swift(>=4.0)
-                let layoutDefaultLowPriority = UILayoutPriority(rawValue: UILayoutPriority.defaultLow.rawValue-1)
-                let layoutDefaultHighPriority = UILayoutPriority(rawValue: UILayoutPriority.defaultHigh.rawValue-1)
-            #else
-                let layoutDefaultLowPriority = UILayoutPriorityDefaultLow-1
-                let layoutDefaultHighPriority = UILayoutPriorityDefaultHigh-1
-            #endif
+            let layoutDefaultLowPriority = UILayoutPriority.defaultLow - 1
+            let layoutDefaultHighPriority = UILayoutPriority.defaultHigh - 1
 
             _titleView?.translatesAutoresizingMaskIntoConstraints = false
             _titleView?.setContentHuggingPriority(layoutDefaultLowPriority, for: .vertical)
