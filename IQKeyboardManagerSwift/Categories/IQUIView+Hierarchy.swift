@@ -26,7 +26,7 @@ import UIKit
 /**
 UIView hierarchy category.
 */
-@objc public extension UIView {
+public extension UIView {
 
     // MARK: viewControllers
 

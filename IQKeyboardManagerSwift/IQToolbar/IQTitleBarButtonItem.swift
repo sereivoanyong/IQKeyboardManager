@@ -25,7 +25,7 @@ import UIKit
 
 open class IQTitleBarButtonItem: IQBarButtonItem {
 
-    @objc open var titleFont: UIFont? {
+    open var titleFont: UIFont? {
 
         didSet {
             if let unwrappedFont = titleFont {
@@ -36,7 +36,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
         }
     }
 
-    @objc override open var title: String? {
+    override open var title: String? {
         didSet {
                 titleButton?.setTitle(title, for: .normal)
         }
@@ -45,7 +45,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
     /**
      titleColor to be used for displaying button text when displaying title (disabled state).
      */
-    @objc open var titleColor: UIColor? {
+    open var titleColor: UIColor? {
 
         didSet {
 
@@ -60,7 +60,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
     /**
      selectableTitleColor to be used for displaying button text when button is enabled.
      */
-    @objc open var selectableTitleColor: UIColor? {
+    open var selectableTitleColor: UIColor? {
 
         didSet {
 
@@ -75,7 +75,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
     /**
      Customized Invocation to be called on title button action. titleInvocation is internally created using setTitleTarget:action: method.
      */
-    @objc override open var invocation: IQInvocation? {
+    override open var invocation: IQInvocation? {
 
         didSet {
 
@@ -94,11 +94,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
     var titleButton: UIButton?
     private var _titleView: UIView?
 
-    override init() {
-        super.init()
-    }
-
-    @objc public convenience init(title: String?) {
+    public convenience init(title: String?) {
 
         self.init(title: nil, style: .plain, target: nil, action: nil)
 
@@ -146,10 +142,6 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
         }
 
         customView = _titleView
-    }
-
-    @objc required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 
     deinit {

@@ -31,7 +31,7 @@ public extension IQKeyboardManager {
         static var enableDebugging = "enableDebugging"
     }
 
-    @objc var enableDebugging: Bool {
+    var enableDebugging: Bool {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.enableDebugging) as? Bool ?? false
         }
@@ -46,7 +46,7 @@ public extension IQKeyboardManager {
      If you do unregisterAllNotifications then library will not work at all. You should only use below methods if you want to completedly disable all library functions.
      You should use below methods at your own risk.
      */
-    @objc func registerAllNotifications() {
+    func registerAllNotifications() {
 
         //  Registering for keyboard notification.
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -64,7 +64,7 @@ public extension IQKeyboardManager {
         NotificationCenter.default.addObserver(self, selector: #selector(self.willChangeStatusBarOrientation(_:)), name: UIApplication.willChangeStatusBarOrientationNotification, object: UIApplication.shared)
     }
 
-    @objc func unregisterAllNotifications() {
+    func unregisterAllNotifications() {
 
         //  Unregistering for keyboard notification.
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)

@@ -50,7 +50,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
      Previous bar button of toolbar.
      */
     private var privatePreviousBarButton: IQBarButtonItem?
-    @objc open var previousBarButton: IQBarButtonItem {
+    open var previousBarButton: IQBarButtonItem {
         get {
             if privatePreviousBarButton == nil {
                 privatePreviousBarButton = IQBarButtonItem(image: nil, style: .plain, target: nil, action: nil)
@@ -67,7 +67,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
      Next bar button of toolbar.
      */
     private var privateNextBarButton: IQBarButtonItem?
-    @objc open var nextBarButton: IQBarButtonItem {
+    open var nextBarButton: IQBarButtonItem {
         get {
             if privateNextBarButton == nil {
                 privateNextBarButton = IQBarButtonItem(image: nil, style: .plain, target: nil, action: nil)
@@ -84,7 +84,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
      Title bar button of toolbar.
      */
     private var privateTitleBarButton: IQTitleBarButtonItem?
-    @objc open var titleBarButton: IQTitleBarButtonItem {
+    open var titleBarButton: IQTitleBarButtonItem {
         get {
             if privateTitleBarButton == nil {
                 privateTitleBarButton = IQTitleBarButtonItem(title: nil)
@@ -102,7 +102,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
      Done bar button of toolbar.
      */
     private var privateDoneBarButton: IQBarButtonItem?
-    @objc open var doneBarButton: IQBarButtonItem {
+    open var doneBarButton: IQBarButtonItem {
         get {
             if privateDoneBarButton == nil {
                 privateDoneBarButton = IQBarButtonItem(title: nil, style: .done, target: nil, action: nil)
@@ -119,7 +119,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
      Fixed space bar button of toolbar.
      */
     private var privateFixedSpaceBarButton: IQBarButtonItem?
-    @objc open var fixedSpaceBarButton: IQBarButtonItem {
+    open var fixedSpaceBarButton: IQBarButtonItem {
         get {
             if privateFixedSpaceBarButton == nil {
                 privateFixedSpaceBarButton = IQBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
@@ -150,9 +150,9 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
         self.isTranslucent = true
     }
 
-    @objc required public init?(coder aDecoder: NSCoder) {
+    required public init?(coder: NSCoder) {
         _ = IQToolbar._classInitialize
-        super.init(coder: aDecoder)
+        super.init(coder: coder)
 
         sizeToFit()
 
@@ -160,13 +160,13 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
         self.isTranslucent = true
     }
 
-    @objc override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
         var sizeThatFit = super.sizeThatFits(size)
         sizeThatFit.height = 44
         return sizeThatFit
     }
 
-    @objc override open var tintColor: UIColor! {
+    override open var tintColor: UIColor! {
 
         didSet {
             if let unwrappedItems = items {
@@ -177,7 +177,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
         }
     }
 
-    @objc override open func layoutSubviews() {
+    override open func layoutSubviews() {
 
         super.layoutSubviews()
 
@@ -252,7 +252,7 @@ open class IQToolbar: UIToolbar, UIInputViewAudioFeedback {
         }
     }
 
-    @objc open var enableInputClicksWhenVisible: Bool {
+    open var enableInputClicksWhenVisible: Bool {
         return true
     }
 

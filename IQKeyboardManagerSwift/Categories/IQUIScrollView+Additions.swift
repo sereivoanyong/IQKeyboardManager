@@ -24,7 +24,7 @@
 // import Foundation - UIKit contains Foundation
 import UIKit
 
-@objc public extension UIScrollView {
+public extension UIScrollView {
 
     private struct AssociatedKeys {
         static var shouldIgnoreScrollingAdjustment = "shouldIgnoreScrollingAdjustment"

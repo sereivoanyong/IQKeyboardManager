@@ -26,9 +26,9 @@ import UIKit
 /**
  IQBarButtonItemConfiguration for creating toolbar with bar button items
  */
-@objc public class IQBarButtonItemConfiguration: NSObject {
+final public class IQBarButtonItemConfiguration: NSObject {
 
-    @objc public init(barButtonSystemItem: UIBarButtonItem.SystemItem, action: Selector) {
+    public init(barButtonSystemItem: UIBarButtonItem.SystemItem, action: Selector) {
         self.barButtonSystemItem = barButtonSystemItem
         self.image = nil
         self.title = nil
@@ -36,7 +36,7 @@ import UIKit
         super.init()
     }
 
-    @objc public init(image: UIImage, action: Selector) {
+    public init(image: UIImage, action: Selector) {
         self.barButtonSystemItem = nil
         self.image = image
         self.title = nil
@@ -44,7 +44,7 @@ import UIKit
         super.init()
     }
 
-    @objc public init(title: String, action: Selector) {
+    public init(title: String, action: Selector) {
         self.barButtonSystemItem = nil
         self.image = nil
         self.title = title
@@ -54,11 +54,11 @@ import UIKit
 
     public let barButtonSystemItem: UIBarButtonItem.SystemItem?    //System Item to be used to instantiate bar button.
 
-    @objc public let image: UIImage?    //Image to show on bar button item if it's not a system item.
+    public let image: UIImage?    //Image to show on bar button item if it's not a system item.
 
-    @objc public let title: String?     //Title to show on bar button item if it's not a system item.
+    public let title: String?     //Title to show on bar button item if it's not a system item.
 
-    @objc public let action: Selector?  //action for bar button item. Usually 'doneAction:(IQBarButtonItem*)item'.
+    public let action: Selector?  //action for bar button item. Usually 'doneAction:(IQBarButtonItem*)item'.
 }
 
 /**
@@ -66,7 +66,7 @@ import UIKit
  */
 // swiftlint:disable nesting
 // swiftlint:disable line_length
-@objc public extension UIImage {
+public extension UIImage {
 
     static func keyboardLeftImage() -> UIImage? {
 
@@ -182,7 +182,7 @@ import UIKit
 /**
 UIView category methods to add IQToolbar on UIKeyboard.
 */
-@objc public extension UIView {
+public extension UIView {
 
     private struct AssociatedKeys {
         static var keyboardToolbar = "keyboardToolbar"

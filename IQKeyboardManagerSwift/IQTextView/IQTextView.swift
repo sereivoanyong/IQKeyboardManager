@@ -26,17 +26,17 @@ import UIKit
 /** @abstract UITextView with placeholder support   */
 open class IQTextView: UITextView {
 
-    @objc required public init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         super.init(coder: coder)
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshPlaceholder), name: UITextView.textDidChangeNotification, object: self)
     }
 
-    @objc override public init(frame: CGRect, textContainer: NSTextContainer?) {
+    override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshPlaceholder), name: UITextView.textDidChangeNotification, object: self)
     }
 
-    @objc override open func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshPlaceholder), name: UITextView.textDidChangeNotification, object: self)
     }
@@ -111,7 +111,7 @@ open class IQTextView: UITextView {
         }
     }
 
-    @objc override open func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         IQ_PlaceholderLabel.frame = placeholderExpectedFrame
@@ -126,7 +126,7 @@ open class IQTextView: UITextView {
         }
     }
 
-    @objc override open var text: String! {
+    override open var text: String! {
 
         didSet {
             refreshPlaceholder()
@@ -140,7 +140,7 @@ open class IQTextView: UITextView {
         }
     }
 
-    @objc override open var font: UIFont? {
+    override open var font: UIFont? {
 
         didSet {
 
@@ -152,13 +152,13 @@ open class IQTextView: UITextView {
         }
     }
 
-    @objc override open var textAlignment: NSTextAlignment {
+    override open var textAlignment: NSTextAlignment {
         didSet {
             IQ_PlaceholderLabel.textAlignment = textAlignment
         }
     }
 
-    @objc override weak open var delegate: UITextViewDelegate? {
+    override weak open var delegate: UITextViewDelegate? {
 
         get {
             refreshPlaceholder()
@@ -170,7 +170,7 @@ open class IQTextView: UITextView {
         }
     }
 
-    @objc override open var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         guard !hasText else {
             return super.intrinsicContentSize
         }

@@ -35,7 +35,8 @@ Creates Toolbar according to tag property of TextField's.
 `IQAutoToolbarByPosition`
 Creates Toolbar according to the y,x position of textField in it's superview coordinate.
 */
-@objc public enum IQAutoToolbarManageBehaviour: Int {
+public enum IQAutoToolbarManageBehaviour {
+
     case bySubviews
     case byTag
     case byPosition
@@ -51,7 +52,8 @@ Creates Toolbar according to the y,x position of textField in it's superview coo
  `IQPreviousNextDisplayModeAlwaysShow`
  Always show nextPrevious buttons, if there are more than 1 textField then both buttons will be visible but will be shown as disabled.
  */
-@objc public enum IQPreviousNextDisplayMode: Int {
+public enum IQPreviousNextDisplayMode {
+
     case `default`
     case alwaysHide
     case alwaysShow
@@ -67,7 +69,8 @@ Creates Toolbar according to the y,x position of textField in it's superview coo
  `IQEnableModeDisabled`
  setting is disabled.
  */
-@objc public enum IQEnableMode: Int {
+public enum IQEnableMode {
+
     case `default`
     case enabled
     case disabled

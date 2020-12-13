@@ -32,7 +32,7 @@ public let kIQUseDefaultKeyboardDistance = CGFloat.greatestFiniteMagnitude
 /**
 UIView category for managing UITextField/UITextView
 */
-@objc public extension UIView {
+public extension UIView {
 
     private struct AssociatedKeys {
         static var keyboardDistanceFromTextField = "keyboardDistanceFromTextField"

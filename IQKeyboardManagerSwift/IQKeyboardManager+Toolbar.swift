@@ -190,7 +190,7 @@ extension IQKeyboardManager {
     }
 
     /**    reloadInputViews to reload toolbar buttons enable/disable state on the fly Enhancement ID #434. */
-    @objc func reloadInputViews() {
+    func reloadInputViews() {
 
         //If enabled then adding toolbar.
         if privateIsEnableAutoToolbar() {
@@ -207,7 +207,7 @@ public extension IQKeyboardManager {
     /**
     Returns YES if can navigate to previous responder textField/textView, otherwise NO.
     */
-    @objc var canGoPrevious: Bool {
+    var canGoPrevious: Bool {
         //If it is not first textField. then it's previous object canBecomeFirstResponder.
         guard let textFields = responderViews(), let textFieldRetain = textFieldView, let index = textFields.firstIndex(of: textFieldRetain), index > 0 else {
             return false
@@ -218,7 +218,7 @@ public extension IQKeyboardManager {
     /**
     Returns YES if can navigate to next responder textField/textView, otherwise NO.
     */
-    @objc var canGoNext: Bool {
+    var canGoNext: Bool {
         //If it is not first textField. then it's previous object canBecomeFirstResponder.
         guard let textFields = responderViews(), let textFieldRetain = textFieldView, let index = textFields.firstIndex(of: textFieldRetain), index < textFields.count-1 else {
             return false
@@ -229,7 +229,8 @@ public extension IQKeyboardManager {
     /**
     Navigate to previous responder textField/textView.
     */
-    @objc @discardableResult func goPrevious() -> Bool {
+    @discardableResult
+    func goPrevious() -> Bool {
 
         //If it is not first textField. then it's previous object becomeFirstResponder.
         guard let textFields = responderViews(), let textFieldRetain = textFieldView, let index = textFields.firstIndex(of: textFieldRetain), index > 0 else {
@@ -253,7 +254,7 @@ public extension IQKeyboardManager {
     /**
     Navigate to next responder textField/textView.
     */
-    @objc @discardableResult func goNext() -> Bool {
+    @discardableResult func goNext() -> Bool {
 
         //If it is not first textField. then it's previous object becomeFirstResponder.
         guard let textFields = responderViews(), let textFieldRetain = textFieldView, let index = textFields.firstIndex(of: textFieldRetain), index < textFields.count-1 else {

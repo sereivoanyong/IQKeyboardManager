@@ -23,16 +23,17 @@
 
 import UIKit
 
-@objc public class IQInvocation: NSObject {
-    @objc public weak var target: AnyObject?
-    @objc public var action: Selector
+final public class IQInvocation: NSObject {
 
-    @objc public init(_ target: AnyObject, _ action: Selector) {
+    public weak var target: AnyObject?
+    public var action: Selector
+
+    public init(_ target: AnyObject, _ action: Selector) {
         self.target = target
         self.action = action
     }
 
-    @objc public func invoke(from: Any) {
+    public func invoke(from: Any) {
         if let target = target {
             UIApplication.shared.sendAction(action, to: target, from: from, for: UIEvent())
         }
