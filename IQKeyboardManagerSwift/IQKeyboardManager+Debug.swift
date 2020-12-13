@@ -82,7 +82,7 @@ public extension IQKeyboardManager {
         NotificationCenter.default.removeObserver(self, name: UIApplication.willChangeStatusBarOrientationNotification, object: UIApplication.shared)
     }
 
-    internal func showLog(_ logString: String, indentation: Int = 0) {
+    func showLog(_ logString: String, indentation: Int = 0) {
 
         guard enableDebugging else {
             return

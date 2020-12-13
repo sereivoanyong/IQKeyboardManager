@@ -91,7 +91,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
         }
     }
 
-    internal var titleButton: UIButton?
+    var titleButton: UIButton?
     private var _titleView: UIView?
 
     override init() {

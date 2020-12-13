@@ -53,16 +53,16 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     @objc private(set) var keyboardShowing: Bool = false
 
     /** To save keyboardWillShowNotification. Needed for enable keyboard functionality. */
-    internal var keyboardShowNotification: Notification?
+    var keyboardShowNotification: Notification?
 
     /** To save keyboard rame. */
-    internal var keyboardFrame: CGRect = .zero
+    var keyboardFrame: CGRect = .zero
 
     /** To save keyboard animation duration. */
-    internal var animationDuration: TimeInterval = 0.25
+    var animationDuration: TimeInterval = 0.25
 
     /** To mimic the keyboard animation */
-    internal var animationCurve: UIView.AnimationOptions = .curveEaseOut
+    var animationCurve: UIView.AnimationOptions = .curveEaseOut
 
     /**
      moved distance to the top used to maintain distance between keyboard and textField. Most of the time this will be a positive value.
@@ -75,25 +75,25 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     @objc var movedDistanceChanged: ((CGFloat) -> Void)?
 
     /** Variable to save lastScrollView that was scrolled. */
-    internal weak var lastScrollView: UIScrollView?
+    weak var lastScrollView: UIScrollView?
 
     /** LastScrollView's initial contentOffset. */
-    internal var startingContentOffset: CGPoint = IQKeyboardManager.kIQCGPointInvalid
+    var startingContentOffset: CGPoint = IQKeyboardManager.kIQCGPointInvalid
 
     /** LastScrollView's initial scrollIndicatorInsets. */
-    internal var startingScrollIndicatorInsets: UIEdgeInsets = .zero
+    var startingScrollIndicatorInsets: UIEdgeInsets = .zero
 
     /** LastScrollView's initial contentInsets. */
-    internal var startingContentInsets: UIEdgeInsets = .zero
+    var startingContentInsets: UIEdgeInsets = .zero
 
     /** used to adjust contentInset of UITextView. */
-    internal var startingTextViewContentInsets: UIEdgeInsets = .zero
+    var startingTextViewContentInsets: UIEdgeInsets = .zero
 
     /** used to adjust scrollIndicatorInsets of UITextView. */
-    internal var startingTextViewScrollIndicatorInsets: UIEdgeInsets = .zero
+    var startingTextViewScrollIndicatorInsets: UIEdgeInsets = .zero
 
     /** used with textView to detect a textFieldView contentInset is changed or not. (Bug ID: #92)*/
-    internal var isTextViewContentInsetChanged: Bool = false
+    var isTextViewContentInsetChanged: Bool = false
 
     /** To know if we have any pending request to adjust view position. */
     private var hasPendingAdjustRequest: Bool = false
@@ -106,7 +106,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     /**
      Invalid point value.
      */
-    internal static let  kIQCGPointInvalid = CGPoint.init(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
+    static let  kIQCGPointInvalid = CGPoint.init(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
 
     // MARK: UIKeyboard handling
 
@@ -398,7 +398,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     }
 
     /** Getting keyWindow. */
-    internal func keyWindow() -> UIWindow? {
+    func keyWindow() -> UIWindow? {
 
         if let keyWindow = textFieldView?.window {
             return keyWindow
@@ -433,7 +433,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
 
     // MARK: - Position
 
-    internal func optimizedAdjustPosition() {
+    func optimizedAdjustPosition() {
         if !hasPendingAdjustRequest {
             hasPendingAdjustRequest = true
             OperationQueue.main.addOperation {
@@ -915,7 +915,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         showLog("****** \(#function) ended: \(elapsedTime) seconds ******", indentation: -1)
     }
 
-    internal func restorePosition() {
+    func restorePosition() {
 
         hasPendingAdjustRequest = false
 
@@ -971,7 +971,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     // MARK: - UIKeyboard Notifications
 
     /*  UIKeyboardWillShowNotification. */
-    @objc internal func keyboardWillShow(_ notification: Notification?) {
+    @objc func keyboardWillShow(_ notification: Notification?) {
 
         keyboardShowNotification = notification
 
@@ -1048,7 +1048,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     }
 
     /*  UIKeyboardDidShowNotification. */
-    @objc internal func keyboardDidShow(_ notification: Notification?) {
+    @objc func keyboardDidShow(_ notification: Notification?) {
 
         guard privateIsEnabled(),
               let textFieldView = textFieldView,
@@ -1067,7 +1067,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     }
 
     /*  UIKeyboardWillHideNotification. So setting rootViewController to it's default frame. */
-    @objc internal func keyboardWillHide(_ notification: Notification?) {
+    @objc func keyboardWillHide(_ notification: Notification?) {
 
         //If it's not a fake notification generated by [self setEnable:NO].
         if notification != nil {
@@ -1179,7 +1179,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         showLog("****** \(#function) ended: \(elapsedTime) seconds ******", indentation: -1)
     }
 
-    @objc internal func keyboardDidHide(_ notification: Notification) {
+    @objc func keyboardDidHide(_ notification: Notification) {
 
         let startTime = CACurrentMediaTime()
         showLog("****** \(#function) started ******", indentation: 1)
@@ -1363,7 +1363,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
 extension IQKeyboardManager: UIGestureRecognizerDelegate {
 
     /** Resigning on tap gesture.   (Enhancement ID: #14)*/
-    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
+    @objc func tapRecognized(_ gesture: UITapGestureRecognizer) {
 
         if gesture.state == .ended {
 

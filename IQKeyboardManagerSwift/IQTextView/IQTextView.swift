@@ -117,7 +117,7 @@ open class IQTextView: UITextView {
         IQ_PlaceholderLabel.frame = placeholderExpectedFrame
     }
 
-    @objc internal func refreshPlaceholder() {
+    @objc func refreshPlaceholder() {
 
         if !text.isEmpty || !attributedText.string.isEmpty {
             IQ_PlaceholderLabel.alpha = 0

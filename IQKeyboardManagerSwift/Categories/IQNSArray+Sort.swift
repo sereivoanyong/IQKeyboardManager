@@ -27,7 +27,7 @@ import UIKit
 /**
 UIView.subviews sorting category.
 */
-internal extension Array where Element: UIView {
+extension Array where Element: UIView {
 
     /**
     Returns the array by sorting the UIView's by their tag property.

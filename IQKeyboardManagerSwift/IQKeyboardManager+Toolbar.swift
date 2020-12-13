@@ -24,7 +24,7 @@
 // import Foundation - UIKit contains Foundation
 import UIKit
 
-public extension IQKeyboardManager {
+extension IQKeyboardManager {
 
     /**
     Default tag for toolbar with Done button   -1002.
@@ -37,7 +37,7 @@ public extension IQKeyboardManager {
     private static let  kIQPreviousNextButtonToolbarTag =   -1005
 
     /** Add toolbar if it is required to add on textFields and it's siblings. */
-    internal func addToolbarIfRequired() {
+    func addToolbarIfRequired() {
 
         //Either there is no inputAccessoryView or if accessoryView is not appropriate for current situation(There is Previous/Next/Done toolbar).
         guard let siblings = responderViews(), !siblings.isEmpty,
@@ -152,7 +152,7 @@ public extension IQKeyboardManager {
     }
 
     /** Remove any toolbar if it is IQToolbar. */
-    internal func removeToolbarIfRequired() {    //  (Bug ID: #18)
+    func removeToolbarIfRequired() {    //  (Bug ID: #18)
 
         guard let siblings = responderViews(), !siblings.isEmpty,
               let textField = textFieldView, textField.responds(to: #selector(setter: UITextField.inputAccessoryView)),
@@ -276,7 +276,7 @@ public extension IQKeyboardManager {
     }
 
     /**    previousAction. */
-    @objc internal func previousAction (_ barButton: IQBarButtonItem) {
+    @objc func previousAction (_ barButton: IQBarButtonItem) {
 
         //If user wants to play input Click sound.
         if shouldPlayInputClicks {
@@ -307,7 +307,7 @@ public extension IQKeyboardManager {
     }
 
     /**    nextAction. */
-    @objc internal func nextAction (_ barButton: IQBarButtonItem) {
+    @objc func nextAction (_ barButton: IQBarButtonItem) {
 
         //If user wants to play input Click sound.
         if shouldPlayInputClicks {
@@ -338,7 +338,7 @@ public extension IQKeyboardManager {
     }
 
     /**    doneAction. Resigning current textField. */
-    @objc internal func doneAction (_ barButton: IQBarButtonItem) {
+    @objc func doneAction (_ barButton: IQBarButtonItem) {
 
         //If user wants to play input Click sound.
         if shouldPlayInputClicks {

@@ -82,7 +82,7 @@ open class IQBarButtonItem: UIBarButtonItem {
     /**
      Boolean to know if it's a system item or custom item, we are having a limitation that we cannot override a designated initializer, so we are manually setting this property once in initialization
      */
-    @objc internal var isSystemItem = false
+    @objc var isSystemItem = false
 
     /**
      Additional target & action to do get callback action. Note that setting custom target & selector doesn't affect native functionality, this is just an additional target to get a callback.

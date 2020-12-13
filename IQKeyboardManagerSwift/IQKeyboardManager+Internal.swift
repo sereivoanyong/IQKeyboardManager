@@ -24,7 +24,7 @@
 // import Foundation - UIKit contains Foundation
 import UIKit
 
-internal extension IQKeyboardManager {
+extension IQKeyboardManager {
 
     /**    Get all UITextField/UITextView siblings of textFieldView. */
     func responderViews() -> [UIView]? {

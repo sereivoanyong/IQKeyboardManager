@@ -69,7 +69,7 @@ import UIKit
     }
 }
 
-internal extension UITableView {
+extension UITableView {
 
     func previousIndexPath(of indexPath: IndexPath) -> IndexPath? {
         var previousRow = indexPath.row - 1
@@ -91,7 +91,7 @@ internal extension UITableView {
     }
 }
 
-internal extension UICollectionView {
+extension UICollectionView {
 
     func previousIndexPath(of indexPath: IndexPath) -> IndexPath? {
         var previousRow = indexPath.row - 1

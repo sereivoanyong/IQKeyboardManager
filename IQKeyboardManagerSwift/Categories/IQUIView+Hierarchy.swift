@@ -184,7 +184,7 @@ UIView hierarchy category.
     /**
     Returns all siblings of the receiver which canBecomeFirstResponder.
     */
-    internal func responderSiblings() -> [UIView] {
+    func responderSiblings() -> [UIView] {
 
         //Array of (UITextField/UITextView's).
         var tempTextFields = [UIView]()
@@ -204,7 +204,7 @@ UIView hierarchy category.
     /**
     Returns all deep subViews of the receiver which canBecomeFirstResponder.
     */
-    internal func deepResponderViews() -> [UIView] {
+    func deepResponderViews() -> [UIView] {
 
         //Array of (UITextField/UITextView's).
         var textfields = [UIView]()
@@ -262,7 +262,7 @@ UIView hierarchy category.
     /**
      Returns searchBar if receiver object is UISearchBarTextField, otherwise return nil.
     */
-    internal func textFieldSearchBar() -> UISearchBar? {
+    func textFieldSearchBar() -> UISearchBar? {
 
         var responder: UIResponder? = self.next
 
@@ -283,7 +283,7 @@ UIView hierarchy category.
     /**
     Returns YES if the receiver object is UIAlertSheetTextField, otherwise return NO.
     */
-    internal func isAlertViewTextField() -> Bool {
+    func isAlertViewTextField() -> Bool {
 
         var alertViewController: UIResponder? = viewContainingController()
 
@@ -316,7 +316,7 @@ UIView hierarchy category.
 
 extension NSObject {
 
-    internal func _IQDescription() -> String {
+    func _IQDescription() -> String {
         return "<\(self) \(Unmanaged.passUnretained(self).toOpaque())>"
     }
 }
