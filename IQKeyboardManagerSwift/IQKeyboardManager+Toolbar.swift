@@ -190,7 +190,7 @@ extension IQKeyboardManager {
     }
 
     /**    reloadInputViews to reload toolbar buttons enable/disable state on the fly Enhancement ID #434. */
-    func reloadInputViews() {
+    public func reloadInputViews() {
 
         //If enabled then adding toolbar.
         if privateIsEnableAutoToolbar() {
