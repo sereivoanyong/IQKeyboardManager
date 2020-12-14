@@ -80,7 +80,7 @@ class CustomViewController: UIViewController, UIPopoverPresentationControllerDel
 
             let animationDuration: TimeInterval = 0.3
 
-            UIView.animate(withDuration: animationDuration, delay: 0, options: finalCurve, animations: { () -> Void in
+            UIView.animate(withDuration: animationDuration, delay: 0, options: finalCurve, animations: {
 
                 if self.settingsTopConstraint.constant != 0 {
                     self.settingsTopConstraint.constant = 0
@@ -90,7 +90,7 @@ class CustomViewController: UIViewController, UIPopoverPresentationControllerDel
 
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
-            }) { (_: Bool) -> Void in}
+            })
         }
     }
 

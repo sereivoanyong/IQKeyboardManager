@@ -531,7 +531,7 @@ final public class IQKeyboardManager: NSObject {
 
                 if lastScrollView.contentInset != self.startingContentInsets {
                     showLog("Restoring contentInset to: \(startingContentInsets)")
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         lastScrollView.contentInset = self.startingContentInsets
                         lastScrollView.scrollIndicatorInsets = self.startingScrollIndicatorInsets
@@ -562,7 +562,7 @@ final public class IQKeyboardManager: NSObject {
 
                 if lastScrollView.contentInset != self.startingContentInsets {
                     showLog("Restoring contentInset to: \(startingContentInsets)")
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         lastScrollView.contentInset = self.startingContentInsets
                         lastScrollView.scrollIndicatorInsets = self.startingScrollIndicatorInsets
@@ -723,7 +723,7 @@ final public class IQKeyboardManager: NSObject {
                             self.showLog("Remaining Move: \(move)")
 
                             //Getting problem while using `setContentOffset:animated:`, So I used animation API.
-                            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                                 var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
@@ -777,7 +777,7 @@ final public class IQKeyboardManager: NSObject {
                 if lastScrollView.contentInset != movedInsets {
                     showLog("old ContentInset: \(lastScrollView.contentInset) new ContentInset: \(movedInsets)")
 
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
                         lastScrollView.contentInset = movedInsets
 
                         var newScrollIndicatorInset: UIEdgeInsets
@@ -841,11 +841,11 @@ final public class IQKeyboardManager: NSObject {
                 if textView.contentInset != newContentInset {
                     self.showLog("\(textFieldView) Old UITextView.contentInset: \(textView.contentInset) New UITextView.contentInset: \(newContentInset)")
 
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         textView.contentInset = newContentInset
                         textView.scrollIndicatorInsets = newContentInset
-                    }, completion: { (_) -> Void in })
+                    })
                 }
             }
         }
@@ -858,7 +858,7 @@ final public class IQKeyboardManager: NSObject {
             if rootController.view.frame.origin != rootViewOrigin {
                 showLog("Moving Upward")
 
-                UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                     var rect = rootController.view.frame
                     rect.origin = rootViewOrigin
@@ -890,7 +890,7 @@ final public class IQKeyboardManager: NSObject {
                     //  Setting adjusted rootViewRect
                     //  Setting adjusted rootViewRect
 
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         var rect = rootController.view.frame
                         rect.origin = rootViewOrigin
@@ -926,7 +926,7 @@ final public class IQKeyboardManager: NSObject {
 
         if rootViewController.view.frame.origin != self.topViewBeginOrigin {
             //Used UIViewAnimationOptionBeginFromCurrentState to minimize strange animations.
-            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                 self.showLog("Restoring \(rootViewController) origin to: \(self.topViewBeginOrigin)")
 
@@ -1106,7 +1106,7 @@ final public class IQKeyboardManager: NSObject {
         //Restoring the contentOffset of the lastScrollView
         if let lastScrollView = lastScrollView {
 
-            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+            UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                 if lastScrollView.contentInset != self.startingContentInsets {
                     self.showLog("Restoring contentInset to: \(self.startingContentInsets)")
@@ -1221,11 +1221,11 @@ final public class IQKeyboardManager: NSObject {
             if let textView = textFieldView as? UIScrollView, textView.responds(to: #selector(getter: UITextView.isEditable)),
                 textView.inputAccessoryView == nil {
 
-                UIView.animate(withDuration: 0.00001, delay: 0, options: animationCurve, animations: { () -> Void in
+                UIView.animate(withDuration: 0.00001, delay: 0, options: animationCurve, animations: {
 
                     self.addToolbarIfRequired()
 
-                }, completion: { (_) -> Void in
+                }, completion: { _ in
 
                     //On textView toolbar didn't appear on first time, so forcing textView to reload it's inputViews.
                     textView.reloadInputViews()
@@ -1298,13 +1298,13 @@ final public class IQKeyboardManager: NSObject {
                 if textView.contentInset != self.startingTextViewContentInsets {
                     self.showLog("Restoring textView.contentInset to: \(self.startingTextViewContentInsets)")
 
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         //Setting textField to it's initial contentInset
                         textView.contentInset = self.startingTextViewContentInsets
                         textView.scrollIndicatorInsets = self.startingTextViewScrollIndicatorInsets
 
-                    }, completion: { (_) -> Void in })
+                    })
                 }
             }
         }
@@ -1341,7 +1341,7 @@ final public class IQKeyboardManager: NSObject {
             if isTextViewContentInsetChanged {
                 self.isTextViewContentInsetChanged = false
                 if textView.contentInset != self.startingTextViewContentInsets {
-                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
+                    UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
 
                         self.showLog("Restoring textView.contentInset to: \(self.startingTextViewContentInsets)")
 
@@ -1349,7 +1349,7 @@ final public class IQKeyboardManager: NSObject {
                         textView.contentInset = self.startingTextViewContentInsets
                         textView.scrollIndicatorInsets = self.startingTextViewScrollIndicatorInsets
 
-                    }, completion: { (_) -> Void in })
+                    })
                 }
             }
         }

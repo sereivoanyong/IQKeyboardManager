@@ -24,9 +24,7 @@ class ViewController: UITableViewController, UIPopoverPresentationControllerDele
 
         let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         controller.excludedActivityTypes = [.print, .copyToPasteboard, .assignToContact, .saveToCameraRoll]
-        present(controller, animated: true) { () -> Void in
-
-        }
+        present(controller, animated: true, completion: nil)
     }
 
     override func viewDidLoad() {
