@@ -462,7 +462,7 @@ final public class IQKeyboardManager: NSObject {
         showLog("Need to move: \(move)")
 
         var superScrollView: UIScrollView?
-        var superView = textFieldView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+        var superView = textFieldView.superview(of: UIScrollView.self)
 
         //Getting UIScrollView whose scrolling is enabled.    //  (Bug ID: #285)
         while let view = superView {
@@ -472,7 +472,7 @@ final public class IQKeyboardManager: NSObject {
                 break
             } else {
                 //  Getting it's superScrollView.   //  (Enhancement ID: #21, #24)
-                superView = view.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                superView = view.superview(of: UIScrollView.self)
             }
         }
 
@@ -496,7 +496,7 @@ final public class IQKeyboardManager: NSObject {
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
                     if #available(iOS 9, *) {
-                        animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil
+                        animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: lastScrollView) != nil
                     }
 
                     if animatedContentOffset {
@@ -527,7 +527,7 @@ final public class IQKeyboardManager: NSObject {
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
                     if #available(iOS 9, *) {
-                        animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil
+                        animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: lastScrollView) != nil
                     }
 
                     if animatedContentOffset {
@@ -580,11 +580,11 @@ final public class IQKeyboardManager: NSObject {
                 if move > 0 {
                     shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.contentInset.top)
 
-                } else if let tableView = scrollView.superviewOfClassType(UITableView.self) as? UITableView {
+                } else if let tableView = scrollView.superview(of: UITableView.self) {
 
                     shouldContinue = scrollView.contentOffset.y > 0
 
-                    if shouldContinue, let tableCell = textFieldView.superviewOfClassType(UITableViewCell.self) as? UITableViewCell, let indexPath = tableView.indexPath(for: tableCell), let previousIndexPath = tableView.previousIndexPath(of: indexPath) {
+                    if shouldContinue, let tableCell = textFieldView.superview(of: UITableViewCell.self), let indexPath = tableView.indexPath(for: tableCell), let previousIndexPath = tableView.previousIndexPath(of: indexPath) {
 
                         let previousCellRect = tableView.rectForRow(at: previousIndexPath)
                         if !previousCellRect.isEmpty {
@@ -593,11 +593,11 @@ final public class IQKeyboardManager: NSObject {
                             move = min(0, previousCellRectInRootSuperview.maxY - topLayoutGuide)
                         }
                     }
-                } else if let collectionView = scrollView.superviewOfClassType(UICollectionView.self) as? UICollectionView {
+                } else if let collectionView = scrollView.superview(of: UICollectionView.self) {
 
                     shouldContinue = scrollView.contentOffset.y > 0
 
-                    if shouldContinue, let collectionCell = textFieldView.superviewOfClassType(UICollectionViewCell.self) as? UICollectionViewCell, let indexPath = collectionView.indexPath(for: collectionCell), let previousIndexPath = collectionView.previousIndexPath(of: indexPath), let attributes = collectionView.layoutAttributesForItem(at: previousIndexPath) {
+                    if shouldContinue, let collectionCell = textFieldView.superview(of: UICollectionViewCell.self), let indexPath = collectionView.indexPath(for: collectionCell), let previousIndexPath = collectionView.previousIndexPath(of: indexPath), let attributes = collectionView.layoutAttributesForItem(at: previousIndexPath) {
 
                         let previousCellRect = attributes.frame
                         if !previousCellRect.isEmpty {
@@ -618,7 +618,7 @@ final public class IQKeyboardManager: NSObject {
                 //Looping in upper hierarchy until we don't found any scrollView in it's upper hirarchy till UIWindow object.
                 if shouldContinue {
 
-                    var tempScrollView = scrollView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                    var tempScrollView = scrollView.superview(of: UIScrollView.self)
                     var nextScrollView: UIScrollView?
                     while let view = tempScrollView {
 
@@ -626,7 +626,7 @@ final public class IQKeyboardManager: NSObject {
                             nextScrollView = view
                             break
                         } else {
-                            tempScrollView = view.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                            tempScrollView = view.superview(of: UIScrollView.self)
                         }
                     }
 
@@ -678,7 +678,7 @@ final public class IQKeyboardManager: NSObject {
                                 var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
                                 if #available(iOS 9, *) {
-                                    animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: scrollView) != nil
+                                    animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: scrollView) != nil
                                 }
 
                                 if animatedContentOffset {
@@ -1069,7 +1069,7 @@ final public class IQKeyboardManager: NSObject {
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
                     if #available(iOS 9, *) {
-                        animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil
+                        animatedContentOffset = self.textFieldView?.superview(of: UIStackView.self, belowView: lastScrollView) != nil
                     }
 
                     if animatedContentOffset {
@@ -1097,7 +1097,7 @@ final public class IQKeyboardManager: NSObject {
                             var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
                             if #available(iOS 9, *) {
-                                animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: scrollView) != nil
+                                animatedContentOffset = self.textFieldView?.superview(of: UIStackView.self, belowView: scrollView) != nil
                             }
 
                             if animatedContentOffset {
@@ -1110,7 +1110,7 @@ final public class IQKeyboardManager: NSObject {
                         }
                     }
 
-                    superScrollView = scrollView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                    superScrollView = scrollView.superview(of: UIScrollView.self)
                 }
             })
         }

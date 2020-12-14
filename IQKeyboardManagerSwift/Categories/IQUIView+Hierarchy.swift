@@ -26,33 +26,29 @@ import UIKit
 /**
 UIView hierarchy category.
 */
-public extension UIView {
+extension UIView {
 
     // MARK: viewControllers
 
     /**
     Returns the UIViewController object that manages the receiver.
     */
-    func viewContainingController() -> UIViewController? {
-
-        var nextResponder: UIResponder? = self
-
-        repeat {
-            nextResponder = nextResponder?.next
-
-            if let viewController = nextResponder as? UIViewController {
+    final var containingViewController: UIViewController? {
+        if let next = next {
+            if let viewController = next as? UIViewController {
                 return viewController
             }
-
-        } while nextResponder != nil
-
+            if let view = next as? UIView {
+                return view.containingViewController
+            }
+        }
         return nil
     }
 
     /**
     Returns the topMost UIViewController object in hierarchy.
     */
-    func topMostController() -> UIViewController? {
+    final func topMostController() -> UIViewController? {
 
         var controllersHierarchy = [UIViewController]()
 
@@ -66,7 +62,7 @@ public extension UIView {
                 controllersHierarchy.append(presented)
             }
 
-            var matchController: UIResponder? = viewContainingController()
+            var matchController: UIResponder? = containingViewController
 
             while let mController = matchController as? UIViewController, controllersHierarchy.contains(mController) == false {
 
@@ -79,16 +75,16 @@ public extension UIView {
             return matchController as? UIViewController
 
         } else {
-            return viewContainingController()
+            return containingViewController
         }
     }
 
     /**
      Returns the UIViewController object that is actually the parent of this object. Most of the time it's the viewController object which actually contains it, but result may be different if it's viewController is added as childViewController of another viewController.
      */
-    func parentContainerViewController() -> UIViewController? {
+    final func parentContainerViewController() -> UIViewController? {
 
-        var matchController = viewContainingController()
+        var matchController = containingViewController
         var parentContainerViewController: UIViewController?
 
         if var navController = matchController?.navigationController {
@@ -144,52 +140,47 @@ public extension UIView {
      
      @param belowView view object in upper hierarchy where method should stop searching and return nil
 */
-    func superviewOfClassType(_ classType: UIView.Type, belowView: UIView? = nil) -> UIView? {
-
-        var superView = superview
-
-        while let unwrappedSuperView = superView {
-
-            if unwrappedSuperView.isKind(of: classType) {
+    final func superview<T: UIView>(of type: T.Type, belowView: UIView? = nil) -> T? {
+        if let superview = superview {
+            if let superview = superview as? T {
 
                 //If it's UIScrollView, then validating for special cases
-                if unwrappedSuperView.isKind(of: UIScrollView.self) {
+                if superview is UIScrollView {
 
-                    let classNameString = NSStringFromClass(type(of: unwrappedSuperView.self))
+                    let classNameString = NSStringFromClass(Swift.type(of: superview))
 
                     //  If it's not UITableViewWrapperView class, this is internal class which is actually manage in UITableview. The speciality of this class is that it's superview is UITableView.
                     //  If it's not UITableViewCellScrollView class, this is internal class which is actually manage in UITableviewCell. The speciality of this class is that it's superview is UITableViewCell.
                     //If it's not _UIQueuingScrollView class, actually we validate for _ prefix which usually used by Apple internal classes
-                    if unwrappedSuperView.superview?.isKind(of: UITableView.self) == false,
-                        unwrappedSuperView.superview?.isKind(of: UITableViewCell.self) == false,
-                        classNameString.hasPrefix("_") == false {
-                        return superView
+                    if superview.superview?.isKind(of: UITableView.self) == false,
+                       superview.superview?.isKind(of: UITableViewCell.self) == false,
+                       !classNameString.hasPrefix("_") {
+                        return superview
                     }
                 } else {
-                    return superView
+                    return superview
                 }
-            } else if unwrappedSuperView == belowView {
+            } else if superview == belowView {
                 return nil
             }
 
-            superView = unwrappedSuperView.superview
+            return superview.superview(of: type, belowView: belowView)
         }
-
         return nil
     }
 
     /**
     Returns all siblings of the receiver which canBecomeFirstResponder.
     */
-    func responderSiblings() -> [UIView] {
+    final func responderSiblings() -> [UIView] {
 
         //Array of (UITextField/UITextView's).
         var tempTextFields = [UIView]()
 
         //	Getting all siblings
-        if let siblings = superview?.subviews {
-            for textField in siblings {
-                if (textField == self || textField.ignoreSwitchingByNextPrevious == false), textField.IQcanBecomeFirstResponder() {
+        if let superview = superview {
+            for textField in superview.subviews {
+                if (textField == self || !textField.ignoreSwitchingByNextPrevious) && textField.IQcanBecomeFirstResponder() {
                     tempTextFields.append(textField)
                 }
             }
@@ -201,7 +192,7 @@ public extension UIView {
     /**
     Returns all deep subViews of the receiver which canBecomeFirstResponder.
     */
-    func deepResponderViews() -> [UIView] {
+    final func deepResponderViews() -> [UIView] {
 
         //Array of (UITextField/UITextView's).
         var textfields = [UIView]()
@@ -259,36 +250,32 @@ public extension UIView {
     /**
      Returns searchBar if receiver object is UISearchBarTextField, otherwise return nil.
     */
-    func textFieldSearchBar() -> UISearchBar? {
-
-        var responder: UIResponder? = self.next
-
-        while let bar = responder {
-
-            if let searchBar = bar as? UISearchBar {
+    final func textFieldSearchBar() -> UISearchBar? {
+        var responder = next
+        if let currentResponder = responder {
+            if let searchBar = currentResponder as? UISearchBar {
                 return searchBar
-            } else if bar is UIViewController {
-                break
             }
-
-            responder = bar.next
+            if currentResponder is UIViewController {
+                return nil
+            }
+            responder = currentResponder.next
         }
-
         return nil
     }
 
     /**
     Returns YES if the receiver object is UIAlertSheetTextField, otherwise return NO.
     */
-    func isAlertViewTextField() -> Bool {
+    final func isAlertViewTextField() -> Bool {
 
-        var alertViewController: UIResponder? = viewContainingController()
+        var alertViewController: UIResponder? = containingViewController
 
         var isAlertViewTextField = false
 
         while let controller = alertViewController, !isAlertViewTextField {
 
-            if controller.isKind(of: UIAlertController.self) {
+            if controller is UIAlertController {
                 isAlertViewTextField = true
                 break
             }
@@ -297,23 +284,5 @@ public extension UIView {
         }
 
         return isAlertViewTextField
-    }
-
-    private func depth() -> Int {
-        var depth: Int = 0
-
-        if let superView = superview {
-            depth = superView.depth()+1
-        }
-
-        return depth
-    }
-
-}
-
-extension NSObject {
-
-    func _IQDescription() -> String {
-        return "<\(self) \(Unmanaged.passUnretained(self).toOpaque())>"
     }
 }

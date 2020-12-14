@@ -33,7 +33,7 @@ extension IQKeyboardManager {
 
         //If find any consider responderView in it's upper hierarchy then will get deepResponderView.
         for disabledClass in toolbarPreviousNextAllowedClasses {
-            superConsideredView = textFieldView?.superviewOfClassType(disabledClass)
+            superConsideredView = textFieldView?.superview(of: disabledClass)
             if superConsideredView != nil {
                 break
             }
@@ -72,7 +72,7 @@ extension IQKeyboardManager {
             isEnabled = true
         } else if enableMode == .disabled {
             isEnabled = false
-        } else if var textFieldViewController = textFieldView?.viewContainingController() {
+        } else if var textFieldViewController = textFieldView?.containingViewController {
 
             //If it is searchBar textField embedded in Navigation Bar
             if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
@@ -109,7 +109,7 @@ extension IQKeyboardManager {
 
     func privateIsEnableAutoToolbar() -> Bool {
 
-        guard var textFieldViewController = textFieldView?.viewContainingController() else {
+        guard var textFieldViewController = textFieldView?.containingViewController else {
             return enableAutoToolbar
         }
 
@@ -156,7 +156,7 @@ extension IQKeyboardManager {
             shouldResign = true
         } else if enableMode == .disabled {
             shouldResign = false
-        } else if var textFieldViewController = textFieldView?.viewContainingController() {
+        } else if var textFieldViewController = textFieldView?.containingViewController {
 
             //If it is searchBar textField embedded in Navigation Bar
             if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {

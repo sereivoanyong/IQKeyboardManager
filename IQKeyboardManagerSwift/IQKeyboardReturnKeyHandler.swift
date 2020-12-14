@@ -116,7 +116,7 @@ final public class IQKeyboardReturnKeyHandler: NSObject {
         //If find any consider responderView in it's upper hierarchy then will get deepResponderView. (Bug ID: #347)
         for disabledClass in IQKeyboardManager.shared.toolbarPreviousNextAllowedClasses {
 
-            superConsideredView = view.superviewOfClassType(disabledClass)
+            superConsideredView = view.superview(of: disabledClass)
 
             if superConsideredView != nil {
                 break
@@ -246,7 +246,7 @@ final public class IQKeyboardReturnKeyHandler: NSObject {
         //If find any consider responderView in it's upper hierarchy then will get deepResponderView. (Bug ID: #347)
         for disabledClass in IQKeyboardManager.shared.toolbarPreviousNextAllowedClasses {
 
-            superConsideredView = view.superviewOfClassType(disabledClass)
+            superConsideredView = view.superview(of: disabledClass)
 
             if superConsideredView != nil {
                 break
