@@ -26,7 +26,8 @@ import UIKit
 import CoreGraphics
 import QuartzCore
 
-// MARK: IQToolbar tags
+/// Invalid point value.
+private let kIQCGPointInvalid = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: .greatestFiniteMagnitude)
 
 /**
 Codeless drop-in universal library allows to prevent issues of keyboard sliding up and cover UITextField/UITextView. Neither need to write any code nor any setup required and much more. A generic version of KeyboardManagement. https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html
@@ -37,7 +38,7 @@ final public class IQKeyboardManager: NSObject {
     /** To save UITextField/UITextView object voa textField/textView notifications. */
     weak var textFieldView: UIView?
 
-    var topViewBeginOrigin: CGPoint = IQKeyboardManager.kIQCGPointInvalid
+    var topViewBeginOrigin: CGPoint = kIQCGPointInvalid
 
     /** To save rootViewController */
     weak var rootViewController: UIViewController?
@@ -45,7 +46,7 @@ final public class IQKeyboardManager: NSObject {
     /** To overcome with popGestureRecognizer issue Bug ID: #1361 */
     weak var rootViewControllerWhilePopGestureRecognizerActive: UIViewController?
 
-    var topViewBeginOriginWhilePopGestureRecognizerActive: CGPoint = IQKeyboardManager.kIQCGPointInvalid
+    var topViewBeginOriginWhilePopGestureRecognizerActive: CGPoint = kIQCGPointInvalid
 
     /**
      Boolean to know if keyboard is showing.
@@ -78,7 +79,7 @@ final public class IQKeyboardManager: NSObject {
     weak var lastScrollView: UIScrollView?
 
     /** LastScrollView's initial contentOffset. */
-    var startingContentOffset: CGPoint = IQKeyboardManager.kIQCGPointInvalid
+    var startingContentOffset: CGPoint = kIQCGPointInvalid
 
     /** LastScrollView's initial scrollIndicatorInsets. */
     var startingScrollIndicatorInsets: UIEdgeInsets = .zero
@@ -102,11 +103,6 @@ final public class IQKeyboardManager: NSObject {
     Returns the default singleton instance.
     */
     public static let shared = IQKeyboardManager()
-
-    /**
-     Invalid point value.
-     */
-    static let  kIQCGPointInvalid = CGPoint.init(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
 
     // MARK: UIKeyboard handling
 
@@ -874,7 +870,7 @@ final public class IQKeyboardManager: NSObject {
         hasPendingAdjustRequest = false
 
         //  Setting rootViewController frame to it's original position. //  (Bug ID: #18)
-        guard topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid, let rootViewController = rootViewController else {
+        guard topViewBeginOrigin != kIQCGPointInvalid, let rootViewController = rootViewController else {
             return
         }
 
@@ -915,7 +911,7 @@ final public class IQKeyboardManager: NSObject {
 
         guard privateIsEnabled(),
             keyboardShowing,
-            topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid,
+            topViewBeginOrigin != kIQCGPointInvalid,
             let textFieldView = textFieldView,
             textFieldView.isAlertViewTextField() == false else {
                 return
@@ -957,7 +953,7 @@ final public class IQKeyboardManager: NSObject {
 
         guard privateIsEnabled() else {
             restorePosition()
-            topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
+            topViewBeginOrigin = kIQCGPointInvalid
             return
         }
 
@@ -965,7 +961,7 @@ final public class IQKeyboardManager: NSObject {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  (Bug ID: #5)
-        if let textFieldView = textFieldView, topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {
+        if let textFieldView = textFieldView, topViewBeginOrigin == kIQCGPointInvalid {
 
             //  keyboard is not showing(At the beginning only). We should save rootViewRect.
             rootViewController = textFieldView.parentContainerViewController()
@@ -978,7 +974,7 @@ final public class IQKeyboardManager: NSObject {
                 }
 
                 rootViewControllerWhilePopGestureRecognizerActive = nil
-                topViewBeginOriginWhilePopGestureRecognizerActive = IQKeyboardManager.kIQCGPointInvalid
+                topViewBeginOriginWhilePopGestureRecognizerActive = kIQCGPointInvalid
 
                 self.showLog("Saving \(controller) beginning origin: \(self.topViewBeginOrigin)")
             }
@@ -1139,7 +1135,7 @@ final public class IQKeyboardManager: NSObject {
         let startTime = CACurrentMediaTime()
         showLog("****** \(#function) started ******", indentation: 1)
 
-        topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
+        topViewBeginOrigin = kIQCGPointInvalid
 
         keyboardFrame = CGRect.zero
 
@@ -1196,9 +1192,9 @@ final public class IQKeyboardManager: NSObject {
 
         if privateIsEnabled() == false {
             restorePosition()
-            topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
+            topViewBeginOrigin = kIQCGPointInvalid
         } else {
-            if topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {    //  (Bug ID: #5)
+            if topViewBeginOrigin == kIQCGPointInvalid {    //  (Bug ID: #5)
 
                 rootViewController = textFieldView?.parentContainerViewController()
 
@@ -1211,7 +1207,7 @@ final public class IQKeyboardManager: NSObject {
                     }
 
                     rootViewControllerWhilePopGestureRecognizerActive = nil
-                    topViewBeginOriginWhilePopGestureRecognizerActive = IQKeyboardManager.kIQCGPointInvalid
+                    topViewBeginOriginWhilePopGestureRecognizerActive = kIQCGPointInvalid
 
                     self.showLog("Saving \(controller) beginning origin: \(self.topViewBeginOrigin)")
                 }
