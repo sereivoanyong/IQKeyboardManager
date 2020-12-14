@@ -300,42 +300,42 @@ final public class IQKeyboardManager: NSObject {
     /**
      Disable distance handling within the scope of disabled distance handling viewControllers classes. Within this scope, 'enabled' property is ignored. Class should be kind of UIViewController.
      */
-    public var disabledDistanceHandlingClasses  = [UIViewController.Type]()
+    public var disabledDistanceHandlingClasses: [UIViewController.Type] = [UITableViewController.self, UIAlertController.self]
 
     /**
      Enable distance handling within the scope of enabled distance handling viewControllers classes. Within this scope, 'enabled' property is ignored. Class should be kind of UIViewController. If same Class is added in disabledDistanceHandlingClasses list, then enabledDistanceHandlingClasses will be ignored.
      */
-    public var enabledDistanceHandlingClasses  = [UIViewController.Type]()
+    public var enabledDistanceHandlingClasses: [UIViewController.Type] = []
 
     /**
      Disable automatic toolbar creation within the scope of disabled toolbar viewControllers classes. Within this scope, 'enableAutoToolbar' property is ignored. Class should be kind of UIViewController.
      */
-    public var disabledToolbarClasses  = [UIViewController.Type]()
+    public var disabledToolbarClasses: [UIViewController.Type] = [UIAlertController.self]
 
     /**
      Enable automatic toolbar creation within the scope of enabled toolbar viewControllers classes. Within this scope, 'enableAutoToolbar' property is ignored. Class should be kind of UIViewController. If same Class is added in disabledToolbarClasses list, then enabledToolbarClasses will be ignore.
      */
-    public var enabledToolbarClasses  = [UIViewController.Type]()
+    public var enabledToolbarClasses: [UIViewController.Type] = []
 
     /**
      Allowed subclasses of UIView to add all inner textField, this will allow to navigate between textField contains in different superview. Class should be kind of UIView.
      */
-    public var toolbarPreviousNextAllowedClasses  = [UIView.Type]()
+    public var toolbarPreviousNextAllowedClasses: [UIView.Type] = [UITableView.self, UICollectionView.self, IQPreviousNextView.self]
 
     /**
      Disabled classes to ignore 'shouldResignOnTouchOutside' property, Class should be kind of UIViewController.
      */
-    public var disabledTouchResignedClasses  = [UIViewController.Type]()
+    public var disabledTouchResignedClasses: [UIViewController.Type] = [UIAlertController.self]
 
     /**
      Enabled classes to forcefully enable 'shouldResignOnTouchOutsite' property. Class should be kind of UIViewController. If same Class is added in disabledTouchResignedClasses list, then enabledTouchResignedClasses will be ignored.
      */
-    public var enabledTouchResignedClasses  = [UIViewController.Type]()
+    public var enabledTouchResignedClasses: [UIViewController.Type] = []
 
     /**
      if shouldResignOnTouchOutside is enabled then you can customise the behaviour to not recognise gesture touches on some specific view subclasses. Class should be kind of UIView. Default is [UIControl, UINavigationBar]
      */
-    public var touchResignedGestureIgnoreClasses  = [UIView.Type]()
+    public var touchResignedGestureIgnoreClasses: [UIView.Type] = [UIControl.self, UINavigationBar.self]
 
     // MARK: Third Party Library support
     /// Add TextField/TextView Notifications customised Notifications. For example while using YYTextView https://github.com/ibireme/YYText
@@ -377,16 +377,6 @@ final public class IQKeyboardManager: NSObject {
         let textField = UITextField()
         textField.addDoneOnKeyboardWithTarget(nil, action: #selector(self.doneAction(_:)))
         textField.addPreviousNextDoneOnKeyboardWithTarget(nil, previousAction: #selector(self.previousAction(_:)), nextAction: #selector(self.nextAction(_:)), doneAction: #selector(self.doneAction(_:)))
-
-        disabledDistanceHandlingClasses.append(UITableViewController.self)
-        disabledDistanceHandlingClasses.append(UIAlertController.self)
-        disabledToolbarClasses.append(UIAlertController.self)
-        disabledTouchResignedClasses.append(UIAlertController.self)
-        toolbarPreviousNextAllowedClasses.append(UITableView.self)
-        toolbarPreviousNextAllowedClasses.append(UICollectionView.self)
-        toolbarPreviousNextAllowedClasses.append(IQPreviousNextView.self)
-        touchResignedGestureIgnoreClasses.append(UIControl.self)
-        touchResignedGestureIgnoreClasses.append(UINavigationBar.self)
     }
 
     deinit {
