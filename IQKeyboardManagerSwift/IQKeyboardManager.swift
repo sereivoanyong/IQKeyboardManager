@@ -387,40 +387,6 @@ final public class IQKeyboardManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 
-    /** Getting keyWindow. */
-    func keyWindow() -> UIWindow? {
-
-        if let keyWindow = textFieldView?.window {
-            return keyWindow
-        } else {
-
-            struct Static {
-                /** @abstract   Save keyWindow object for reuse.
-                @discussion Sometimes [[UIApplication sharedApplication] keyWindow] is returning nil between the app.   */
-                static weak var keyWindow: UIWindow?
-            }
-
-            var originalKeyWindow: UIWindow?
-
-            if #available(iOS 13, *) {
-                originalKeyWindow = UIApplication.shared.connectedScenes
-                    .compactMap { $0 as? UIWindowScene }
-                    .flatMap { $0.windows }
-                    .first(where: { $0.isKeyWindow })
-            } else {
-                originalKeyWindow = UIApplication.shared.keyWindow
-            }
-
-            //If original key window is not nil and the cached keywindow is also not original keywindow then changing keywindow.
-            if let originalKeyWindow = originalKeyWindow {
-                Static.keyWindow = originalKeyWindow
-            }
-
-            //Return KeyWindow
-            return Static.keyWindow
-        }
-    }
-
     // MARK: - Position
 
     func optimizedAdjustPosition() {
@@ -440,7 +406,7 @@ final public class IQKeyboardManager: NSObject {
         guard hasPendingAdjustRequest,
             let textFieldView = textFieldView,
             let rootController = textFieldView.parentContainerViewController(),
-            let window = keyWindow(),
+            let window = textFieldView.window,
             let textFieldViewRectInWindow = textFieldView.superview?.convert(textFieldView.frame, to: window),
             let textFieldViewRectInRootSuperview = textFieldView.superview?.convert(textFieldView.frame, to: rootController.view?.superview) else {
                 return
@@ -1310,7 +1276,7 @@ final public class IQKeyboardManager: NSObject {
 
         let currentStatusBarOrientation: UIInterfaceOrientation
         if #available(iOS 13, *) {
-            currentStatusBarOrientation = keyWindow()?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.unknown
+            currentStatusBarOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation ?? .unknown
         } else {
             currentStatusBarOrientation = UIApplication.shared.statusBarOrientation
         }
