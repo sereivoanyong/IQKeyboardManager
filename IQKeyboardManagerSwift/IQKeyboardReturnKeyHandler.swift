@@ -24,25 +24,18 @@
 // import Foundation - UIKit contains Foundation
 import UIKit
 
-private class IQTextFieldViewInfoModal: NSObject {
+private struct IQTextFieldViewInfoModal {
 
-    fileprivate weak var textFieldDelegate: UITextFieldDelegate?
-    fileprivate weak var textViewDelegate: UITextViewDelegate?
-    fileprivate weak var textFieldView: UIView?
-    fileprivate var originalReturnKeyType = UIReturnKeyType.default
-
-    init(textFieldView: UIView?, textFieldDelegate: UITextFieldDelegate?, textViewDelegate: UITextViewDelegate?, originalReturnKeyType: UIReturnKeyType = .default) {
-        self.textFieldView = textFieldView
-        self.textFieldDelegate = textFieldDelegate
-        self.textViewDelegate = textViewDelegate
-        self.originalReturnKeyType = originalReturnKeyType
-    }
+    weak var textFieldView: UIView?
+    weak var textFieldDelegate: UITextFieldDelegate?
+    weak var textViewDelegate: UITextViewDelegate?
+    var originalReturnKeyType = UIReturnKeyType.default
 }
 
 /**
 Manages the return key to work like next/done in a view hierarchy.
 */
-public class IQKeyboardReturnKeyHandler: NSObject {
+final public class IQKeyboardReturnKeyHandler: NSObject {
 
     // MARK: Settings
 
@@ -172,7 +165,7 @@ public class IQKeyboardReturnKeyHandler: NSObject {
     */
     public func addTextFieldView(_ view: UIView) {
 
-        let modal = IQTextFieldViewInfoModal(textFieldView: view, textFieldDelegate: nil, textViewDelegate: nil)
+        var modal = IQTextFieldViewInfoModal(textFieldView: view, textFieldDelegate: nil, textViewDelegate: nil)
 
         if let textField = view as? UITextField {
 
