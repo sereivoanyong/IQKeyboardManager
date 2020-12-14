@@ -131,10 +131,7 @@ public extension UIView {
             parentContainerViewController = matchController
         }
 
-        let finalController = parentContainerViewController?.parentIQContainerViewController() ?? parentContainerViewController
-
-        return finalController
-
+        return parentContainerViewController
     }
 
     // MARK: Superviews/Subviews/Siglings
