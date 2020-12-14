@@ -707,7 +707,7 @@ final public class IQKeyboardManager: NSObject {
 
             //Updating contentInset
             if let lastScrollViewRect = lastScrollView.superview?.convert(lastScrollView.frame, to: window),
-                lastScrollView.shouldIgnoreContentInsetAdjustment == false {
+                !lastScrollView.shouldIgnoreContentInsetAdjustment {
 
                 var bottomInset: CGFloat = (kbSize.height)-(window.frame.height-lastScrollViewRect.maxY)
                 var bottomScrollIndicatorInset = bottomInset - newKeyboardDistanceFromTextField
@@ -913,7 +913,7 @@ final public class IQKeyboardManager: NSObject {
             keyboardShowing,
             topViewBeginOrigin != kIQCGPointInvalid,
             let textFieldView = textFieldView,
-            textFieldView.isAlertViewTextField() == false else {
+            !textFieldView.isAlertViewTextField() else {
                 return
         }
         optimizedAdjustPosition()
@@ -985,9 +985,7 @@ final public class IQKeyboardManager: NSObject {
 
             //If textFieldView is inside UITableViewController then let UITableViewController to handle it (Bug ID: #37) (Bug ID: #76) See note:- https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html If it is UIAlertView textField then do not affect anything (Bug ID: #70).
 
-            if keyboardShowing,
-               let textFieldView = textFieldView,
-               textFieldView.isAlertViewTextField() == false {
+            if keyboardShowing, let textFieldView = textFieldView, !textFieldView.isAlertViewTextField() {
 
                 //  keyboard is already showing. adjust position.
                 optimizedAdjustPosition()
@@ -1003,8 +1001,9 @@ final public class IQKeyboardManager: NSObject {
 
         guard privateIsEnabled(),
               let textFieldView = textFieldView,
-              let parentController = textFieldView.parentContainerViewController(), (parentController.modalPresentationStyle == UIModalPresentationStyle.formSheet || parentController.modalPresentationStyle == UIModalPresentationStyle.pageSheet),
-              textFieldView.isAlertViewTextField() == false else {
+              let parentController = textFieldView.parentContainerViewController(),
+              (parentController.modalPresentationStyle == UIModalPresentationStyle.formSheet || parentController.modalPresentationStyle == UIModalPresentationStyle.pageSheet),
+              !textFieldView.isAlertViewTextField() else {
             return
         }
 
@@ -1190,7 +1189,7 @@ final public class IQKeyboardManager: NSObject {
         resignFirstResponderGesture.isEnabled = privateShouldResignOnTouchOutside()
         textFieldView?.window?.addGestureRecognizer(resignFirstResponderGesture)    //   (Enhancement ID: #14)
 
-        if privateIsEnabled() == false {
+        if !privateIsEnabled() {
             restorePosition()
             topViewBeginOrigin = kIQCGPointInvalid
         } else {
@@ -1217,7 +1216,7 @@ final public class IQKeyboardManager: NSObject {
             //See notes:- https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html If it is UIAlertView textField then do not affect anything (Bug ID: #70).
             if keyboardShowing,
                 let textFieldView = textFieldView,
-                textFieldView.isAlertViewTextField() == false {
+                !textFieldView.isAlertViewTextField() {
 
                 //  keyboard is already showing. adjust position.
                 optimizedAdjustPosition()
