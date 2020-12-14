@@ -500,7 +500,7 @@ final public class IQKeyboardManager: NSObject {
         let layoutAreaHeight: CGFloat = rootController.view.layoutMargins.bottom
 
         let topLayoutGuide: CGFloat = max(navigationBarAreaHeight, layoutAreaHeight) + 5
-        let bottomLayoutGuide: CGFloat = (textFieldView is UIScrollView && textFieldView.responds(to: #selector(getter: UITextView.isEditable))) ? 0 : rootController.view.layoutMargins.bottom  //Validation of textView for case where there is a tab bar at the bottom or running on iPhone X and textView is at the bottom.
+        let bottomLayoutGuide: CGFloat = textFieldView is UITextView ? 0 : rootController.view.layoutMargins.bottom  //Validation of textView for case where there is a tab bar at the bottom or running on iPhone X and textView is at the bottom.
 
         //  Move positive = textField is hidden.
         //  Move negative = textField is showing.
@@ -691,9 +691,7 @@ final public class IQKeyboardManager: NSObject {
                         //nextScrollView == nil    If processing scrollView is last scrollView in upper hierarchy (there is no other scrollView upper hierrchy.)
                         //[_textFieldView isKindOfClass:[UITextView class]] If is a UITextView type
                         //shouldOffsetY >= 0     shouldOffsetY must be greater than in order to keep distance from navigationBar (Bug ID: #92)
-                        if (textFieldView is UIScrollView && textFieldView.responds(to: #selector(getter: UITextView.isEditable))),
-                            nextScrollView == nil,
-                            shouldOffsetY >= 0 {
+                        if textFieldView is UITextView, nextScrollView == nil, shouldOffsetY >= 0 {
 
                             //  Converting Rectangle according to window bounds.
                             if let currentTextFieldViewRect = textFieldView.superview?.convert(textFieldView.frame, to: window) {
@@ -799,7 +797,7 @@ final public class IQKeyboardManager: NSObject {
         //Special case for UITextView(Readjusting textView.contentInset when textView hight is too big to fit on screen)
         //_lastScrollView       If not having inside any scrollView, (now contentInset manages the full screen textView.
         //[_textFieldView isKindOfClass:[UITextView class]] If is a UITextView type
-        if let textView = textFieldView as? UIScrollView, textView.isScrollEnabled, textFieldView.responds(to: #selector(getter: UITextView.isEditable)) {
+        if let textView = textFieldView as? UITextView, textView.isScrollEnabled {
 
             //                CGRect rootSuperViewFrameInWindow = [_rootViewController.view.superview convertRect:_rootViewController.view.superview.bounds toView:keyWindow];
             //
@@ -1218,8 +1216,7 @@ final public class IQKeyboardManager: NSObject {
         if privateIsEnableAutoToolbar() {
 
             //UITextView special case. Keyboard Notification is firing before textView notification so we need to resign it first and then again set it as first responder to add toolbar on it.
-            if let textView = textFieldView as? UIScrollView, textView.responds(to: #selector(getter: UITextView.isEditable)),
-                textView.inputAccessoryView == nil {
+            if let textView = textFieldView as? UITextView, textView.inputAccessoryView == nil {
 
                 UIView.animate(withDuration: 0.00001, delay: 0, options: animationCurve, animations: {
 
@@ -1290,7 +1287,7 @@ final public class IQKeyboardManager: NSObject {
 
         // We check if there's a change in original frame or not.
 
-        if let textView = textFieldView as? UIScrollView, textView.responds(to: #selector(getter: UITextView.isEditable)) {
+        if let textView = textFieldView as? UITextView {
 
             if isTextViewContentInsetChanged {
                 self.isTextViewContentInsetChanged = false
@@ -1336,7 +1333,7 @@ final public class IQKeyboardManager: NSObject {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //If textViewContentInsetChanged is saved then restore it.
-        if let textView = textFieldView as? UITextView, textView.responds(to: #selector(getter: UITextView.isEditable)) {
+        if let textView = textFieldView as? UITextView {
 
             if isTextViewContentInsetChanged {
                 self.isTextViewContentInsetChanged = false
