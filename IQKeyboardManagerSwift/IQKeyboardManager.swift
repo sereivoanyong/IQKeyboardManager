@@ -538,7 +538,7 @@ final public class IQKeyboardManager: NSObject {
                     })
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
@@ -569,7 +569,7 @@ final public class IQKeyboardManager: NSObject {
                     })
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
@@ -717,7 +717,7 @@ final public class IQKeyboardManager: NSObject {
 
                         let newContentOffset = CGPoint(x: scrollView.contentOffset.x, y: shouldOffsetY)
 
-                        if scrollView.contentOffset.equalTo(newContentOffset) == false {
+                        if scrollView.contentOffset != newContentOffset {
 
                             showLog("old contentOffset: \(scrollView.contentOffset) new contentOffset: \(newContentOffset)")
                             self.showLog("Remaining Move: \(move)")
@@ -855,7 +855,7 @@ final public class IQKeyboardManager: NSObject {
 
             rootViewOrigin.y = max(rootViewOrigin.y - move, min(0, -(kbSize.height-newKeyboardDistanceFromTextField)))
 
-            if rootController.view.frame.origin.equalTo(rootViewOrigin) == false {
+            if rootController.view.frame.origin != rootViewOrigin {
                 showLog("Moving Upward")
 
                 UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
@@ -885,7 +885,7 @@ final public class IQKeyboardManager: NSObject {
 
                 rootViewOrigin.y -= max(move, disturbDistance)
 
-                if rootController.view.frame.origin.equalTo(rootViewOrigin) == false {
+                if rootController.view.frame.origin != rootViewOrigin {
                     showLog("Moving Downward")
                     //  Setting adjusted rootViewRect
                     //  Setting adjusted rootViewRect
@@ -920,11 +920,11 @@ final public class IQKeyboardManager: NSObject {
         hasPendingAdjustRequest = false
 
         //  Setting rootViewController frame to it's original position. //  (Bug ID: #18)
-        guard topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) == false, let rootViewController = rootViewController else {
+        guard topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid, let rootViewController = rootViewController else {
             return
         }
 
-        if rootViewController.view.frame.origin.equalTo(self.topViewBeginOrigin) == false {
+        if rootViewController.view.frame.origin != self.topViewBeginOrigin {
             //Used UIViewAnimationOptionBeginFromCurrentState to minimize strange animations.
             UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
 
@@ -961,7 +961,8 @@ final public class IQKeyboardManager: NSObject {
 
         guard privateIsEnabled(),
             keyboardShowing,
-            topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) == false, let textFieldView = textFieldView,
+            topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid,
+            let textFieldView = textFieldView,
             textFieldView.isAlertViewTextField() == false else {
                 return
         }
@@ -1010,7 +1011,7 @@ final public class IQKeyboardManager: NSObject {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  (Bug ID: #5)
-        if let textFieldView = textFieldView, topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) {
+        if let textFieldView = textFieldView, topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {
 
             //  keyboard is not showing(At the beginning only). We should save rootViewRect.
             rootViewController = textFieldView.parentContainerViewController()
@@ -1030,7 +1031,7 @@ final public class IQKeyboardManager: NSObject {
         }
 
         //If last restored keyboard size is different(any orientation accure), then refresh. otherwise not.
-        if keyboardFrame.equalTo(oldKBFrame) == false {
+        if keyboardFrame != oldKBFrame {
 
             //If textFieldView is inside UITableViewController then let UITableViewController to handle it (Bug ID: #37) (Bug ID: #76) See note:- https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html If it is UIAlertView textField then do not affect anything (Bug ID: #70).
 
@@ -1113,7 +1114,7 @@ final public class IQKeyboardManager: NSObject {
                     lastScrollView.scrollIndicatorInsets = self.startingScrollIndicatorInsets
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(self.startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != self.startingContentOffset {
                     self.showLog("Restoring contentOffset to: \(self.startingContentOffset)")
 
                     var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
@@ -1142,7 +1143,7 @@ final public class IQKeyboardManager: NSObject {
                     if minimumY < scrollView.contentOffset.y {
 
                         let newContentOffset = CGPoint(x: scrollView.contentOffset.x, y: minimumY)
-                        if scrollView.contentOffset.equalTo(newContentOffset) == false {
+                        if scrollView.contentOffset != newContentOffset {
 
                             var animatedContentOffset = false   //  (Bug ID: #1365, #1508, #1541)
 
@@ -1244,7 +1245,7 @@ final public class IQKeyboardManager: NSObject {
             restorePosition()
             topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
         } else {
-            if topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) {    //  (Bug ID: #5)
+            if topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {    //  (Bug ID: #5)
 
                 rootViewController = textFieldView?.parentContainerViewController()
 
