@@ -66,7 +66,7 @@ extension IQKeyboardManager {
         } else if var textFieldViewController = textFieldView?.containingViewController {
 
             //If it is searchBar textField embedded in Navigation Bar
-            if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
+            if let textField = textFieldView as? UITextField, textField.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
                 textFieldViewController = topController
             }
 
@@ -105,7 +105,7 @@ extension IQKeyboardManager {
         }
 
         //If it is searchBar textField embedded in Navigation Bar
-        if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
+        if let textField = textFieldView as? UITextField, textField.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
             textFieldViewController = topController
         }
 
@@ -150,7 +150,7 @@ extension IQKeyboardManager {
         } else if var textFieldViewController = textFieldView?.containingViewController {
 
             //If it is searchBar textField embedded in Navigation Bar
-            if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
+            if let textField = textFieldView as? UITextField, textField.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
                 textFieldViewController = topController
             }
 

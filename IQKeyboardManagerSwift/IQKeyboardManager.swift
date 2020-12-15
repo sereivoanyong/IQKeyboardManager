@@ -420,7 +420,7 @@ final public class IQKeyboardManager: NSObject {
         //Maintain keyboardDistanceFromTextField
         var newKeyboardDistanceFromTextField = textFieldView.keyboardDistanceFromTextField ?? keyboardDistanceFromTextField
 
-        if let searchBar = textFieldView.textFieldSearchBar(), let keyboardDistanceFromTextField = searchBar.keyboardDistanceFromTextField {
+        if let textField = textFieldView as? UITextField, let searchBar = textField.textFieldSearchBar(), let keyboardDistanceFromTextField = searchBar.keyboardDistanceFromTextField {
             newKeyboardDistanceFromTextField = keyboardDistanceFromTextField
         }
 

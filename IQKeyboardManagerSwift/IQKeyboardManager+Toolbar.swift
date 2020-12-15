@@ -296,7 +296,7 @@ public extension IQKeyboardManager {
 
         //Handling search bar special case
         do {
-            if let searchBar = textFieldRetain.textFieldSearchBar() {
+            if let textField = textFieldRetain as? UITextField, let searchBar = textField.textFieldSearchBar() {
                 invocation = searchBar.keyboardToolbar.previousBarButton.invocation
                 sender = searchBar
             }
@@ -327,7 +327,7 @@ public extension IQKeyboardManager {
 
         //Handling search bar special case
         do {
-            if let searchBar = textFieldRetain.textFieldSearchBar() {
+            if let textField = textFieldRetain as? UITextField, let searchBar = textField.textFieldSearchBar() {
                 invocation = searchBar.keyboardToolbar.nextBarButton.invocation
                 sender = searchBar
             }
@@ -359,7 +359,7 @@ public extension IQKeyboardManager {
 
         //Handling search bar special case
         do {
-            if let searchBar = textFieldRetain.textFieldSearchBar() {
+            if let textField = textFieldRetain as? UITextField, let searchBar = textField.textFieldSearchBar() {
                 invocation = searchBar.keyboardToolbar.doneBarButton.invocation
                 sender = searchBar
             }
