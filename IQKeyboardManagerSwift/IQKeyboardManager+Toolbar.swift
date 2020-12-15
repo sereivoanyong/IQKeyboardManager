@@ -53,14 +53,14 @@ extension IQKeyboardManager {
 
         showLog("Found \(siblings.count) responder sibling(s)")
 
-        let rightConfiguration: IQBarButtonItemConfiguration
+        let rightConfiguration: IQBarButtonItem.Configuration
 
         if let doneBarButtonItemImage = toolbarDoneBarButtonItemImage {
-            rightConfiguration = IQBarButtonItemConfiguration(image: doneBarButtonItemImage, action: #selector(self.doneAction(_:)))
+            rightConfiguration = IQBarButtonItem.Configuration(image: doneBarButtonItemImage, action: #selector(self.doneAction(_:)))
         } else if let doneBarButtonItemText = toolbarDoneBarButtonItemText {
-            rightConfiguration = IQBarButtonItemConfiguration(title: doneBarButtonItemText, action: #selector(self.doneAction(_:)))
+            rightConfiguration = IQBarButtonItem.Configuration(title: doneBarButtonItemText, action: #selector(self.doneAction(_:)))
         } else {
-            rightConfiguration = IQBarButtonItemConfiguration(barButtonSystemItem: .done, action: #selector(self.doneAction(_:)))
+            rightConfiguration = IQBarButtonItem.Configuration(systemItem: .done, action: #selector(self.doneAction(_:)))
         }
         rightConfiguration.accessibilityLabel = toolbarDoneBarButtonItemAccessibilityLabel ?? "Done"
 
@@ -73,25 +73,25 @@ extension IQKeyboardManager {
 
         } else if previousNextDisplayMode == .default || previousNextDisplayMode == .alwaysShow {
 
-            let prevConfiguration: IQBarButtonItemConfiguration
+            let prevConfiguration: IQBarButtonItem.Configuration
 
             if let doneBarButtonItemImage = toolbarPreviousBarButtonItemImage {
-                prevConfiguration = IQBarButtonItemConfiguration(image: doneBarButtonItemImage, action: #selector(self.previousAction(_:)))
+                prevConfiguration = IQBarButtonItem.Configuration(image: doneBarButtonItemImage, action: #selector(self.previousAction(_:)))
             } else if let doneBarButtonItemText = toolbarPreviousBarButtonItemText {
-                prevConfiguration = IQBarButtonItemConfiguration(title: doneBarButtonItemText, action: #selector(self.previousAction(_:)))
+                prevConfiguration = IQBarButtonItem.Configuration(title: doneBarButtonItemText, action: #selector(self.previousAction(_:)))
             } else {
-                prevConfiguration = IQBarButtonItemConfiguration(image: (UIImage.keyboardPreviousImage() ?? UIImage()), action: #selector(self.previousAction(_:)))
+                prevConfiguration = IQBarButtonItem.Configuration(image: (UIImage.keyboardPreviousImage() ?? UIImage()), action: #selector(self.previousAction(_:)))
             }
             prevConfiguration.accessibilityLabel = toolbarPreviousBarButtonItemAccessibilityLabel ?? "Previous"
 
-            let nextConfiguration: IQBarButtonItemConfiguration
+            let nextConfiguration: IQBarButtonItem.Configuration
 
             if let doneBarButtonItemImage = toolbarNextBarButtonItemImage {
-                nextConfiguration = IQBarButtonItemConfiguration(image: doneBarButtonItemImage, action: #selector(self.nextAction(_:)))
+                nextConfiguration = IQBarButtonItem.Configuration(image: doneBarButtonItemImage, action: #selector(self.nextAction(_:)))
             } else if let doneBarButtonItemText = toolbarNextBarButtonItemText {
-                nextConfiguration = IQBarButtonItemConfiguration(title: doneBarButtonItemText, action: #selector(self.nextAction(_:)))
+                nextConfiguration = IQBarButtonItem.Configuration(title: doneBarButtonItemText, action: #selector(self.nextAction(_:)))
             } else {
-                nextConfiguration = IQBarButtonItemConfiguration(image: (UIImage.keyboardNextImage() ?? UIImage()), action: #selector(self.nextAction(_:)))
+                nextConfiguration = IQBarButtonItem.Configuration(image: (UIImage.keyboardNextImage() ?? UIImage()), action: #selector(self.nextAction(_:)))
             }
             nextConfiguration.accessibilityLabel = toolbarNextBarButtonItemAccessibilityLabel ?? "Next"
 

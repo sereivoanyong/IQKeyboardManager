@@ -1,27 +1,10 @@
 //
 //  IQBarButtonItem.swift
-// https://github.com/hackiftekhar/IQKeyboardManager
-// Copyright (c) 2013-20 Iftekhar Qurashi.
+//  IQKeyboardManagerSwift
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+//  Created by Sereivoan Yong on 12/15/20.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 
-// import Foundation - UIKit contains Foundation
 import UIKit
 
 open class IQBarButtonItem: UIBarButtonItem {
@@ -98,4 +81,67 @@ open class IQBarButtonItem: UIBarButtonItem {
      Customized Invocation to be called when button is pressed. invocation is internally created using setTarget:action: method.
      */
     var invocation: IQInvocation?
+}
+
+extension IQBarButtonItem {
+
+    public convenience init(target: AnyObject?, configuration: Configuration) {
+        switch configuration.source {
+        case .systemItem(let systemItem):
+            self.init(barButtonSystemItem: systemItem, target: target, action: configuration.action)
+            isSystemItem = true
+        case .image(let image):
+            self.init(image: image, style: .plain, target: target, action: configuration.action)
+        case .title(let title):
+            self.init(title: title, style: .plain, target: target, action: configuration.action)
+        }
+    }
+
+    /// IQBarButtonItemConfiguration for creating toolbar with bar button items
+    final public class Configuration: NSObject {
+
+        enum Source {
+
+            case systemItem(SystemItem)
+            case image(UIImage)
+            case title(String)
+        }
+
+        let source: Source
+
+        public let systemItem: SystemItem?    //System Item to be used to instantiate bar button.
+
+        public let image: UIImage?    //Image to show on bar button item if it's not a system item.
+
+        public let title: String?     //Title to show on bar button item if it's not a system item.
+
+        public let action: Selector?  //action for bar button item. Usually 'doneAction:(IQBarButtonItem*)item'.
+
+        public init(systemItem: UIBarButtonItem.SystemItem, action: Selector) {
+            source = .systemItem(systemItem)
+            self.systemItem = systemItem
+            self.image = nil
+            self.title = nil
+            self.action = action
+            super.init()
+        }
+
+        public init(image: UIImage?, action: Selector) {
+            source = .image(image!)
+            self.systemItem = nil
+            self.image = image
+            self.title = nil
+            self.action = action
+            super.init()
+        }
+
+        public init(title: String, action: Selector) {
+            source = .title(title)
+            self.systemItem = nil
+            self.image = nil
+            self.title = title
+            self.action = action
+            super.init()
+        }
+    }
 }
