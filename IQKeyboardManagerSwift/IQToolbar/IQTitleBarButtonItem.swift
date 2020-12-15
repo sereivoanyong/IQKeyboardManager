@@ -75,7 +75,7 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
     /**
      Customized Invocation to be called on title button action. titleInvocation is internally created using setTitleTarget:action: method.
      */
-    override open var invocation: IQInvocation? {
+    override var invocation: IQInvocation? {
 
         didSet {
 
@@ -142,12 +142,5 @@ open class IQTitleBarButtonItem: IQBarButtonItem {
         }
 
         customView = _titleView
-    }
-
-    deinit {
-        customView = nil
-        titleButton?.removeTarget(nil, action: nil, for: .touchUpInside)
-        _titleView = nil
-        titleButton = nil
     }
 }

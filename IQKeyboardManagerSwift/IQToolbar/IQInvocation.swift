@@ -23,7 +23,7 @@
 
 import UIKit
 
-final public class IQInvocation: NSObject {
+final class IQInvocation {
 
     public weak var target: AnyObject?
     public var action: Selector
@@ -37,9 +37,5 @@ final public class IQInvocation: NSObject {
         if let target = target {
             UIApplication.shared.sendAction(action, to: target, from: from, for: UIEvent())
         }
-    }
-
-    deinit {
-        target = nil
     }
 }
