@@ -49,16 +49,7 @@ extension IQKeyboardManager {
             }
 
             //Sorting textFields according to behaviour
-            switch toolbarManageBehaviour {
-            //If autoToolbar behaviour is bySubviews, then returning it.
-            case .bySubviews:   return textFields
-
-            //If autoToolbar behaviour is by tag, then sorting it according to tag property.
-            case .byTag:    return textFields.sortedArrayByTag()
-
-            //If autoToolbar behaviour is by tag, then sorting it according to tag property.
-            case .byPosition:    return textFields.sortedArrayByPosition()
-            }
+            return textFields.sorted(by: toolbarManageBehaviour)
         }
     }
 

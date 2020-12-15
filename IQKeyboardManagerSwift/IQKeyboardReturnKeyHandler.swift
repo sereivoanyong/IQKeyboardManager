@@ -133,13 +133,7 @@ final public class IQKeyboardReturnKeyHandler: NSObject {
             textFields = view.responderSiblings()
 
             //Sorting textFields according to behaviour
-            switch IQKeyboardManager.shared.toolbarManageBehaviour {
-                //If needs to sort it by tag
-            case .byTag:        textFields = textFields.sortedArrayByTag()
-                //If needs to sort it by Position
-            case .byPosition:   textFields = textFields.sortedArrayByPosition()
-            default:    break
-            }
+            textFields = textFields.sorted(by: IQKeyboardManager.shared.toolbarManageBehaviour)
         }
 
         if let lastView = textFields.last {
@@ -263,14 +257,7 @@ final public class IQKeyboardReturnKeyHandler: NSObject {
             textFields = view.responderSiblings()
 
             //Sorting textFields according to behaviour
-            switch IQKeyboardManager.shared.toolbarManageBehaviour {
-                //If needs to sort it by tag
-            case .byTag:        textFields = textFields.sortedArrayByTag()
-                //If needs to sort it by Position
-            case .byPosition:   textFields = textFields.sortedArrayByPosition()
-            default:
-                break
-            }
+            textFields = textFields.sorted(by: IQKeyboardManager.shared.toolbarManageBehaviour)
         }
 
         //Getting index of current textField.
