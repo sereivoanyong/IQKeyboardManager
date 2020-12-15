@@ -60,9 +60,6 @@ public enum IQPreviousNextDisplayMode {
 }
 
 /**
- `IQEnableModeDefault`
- Pick default settings.
- 
  `IQEnableModeEnabled`
  setting is enabled.
  
@@ -71,7 +68,6 @@ public enum IQPreviousNextDisplayMode {
  */
 public enum IQEnableMode {
 
-    case `default`
     case enabled
     case disabled
 }

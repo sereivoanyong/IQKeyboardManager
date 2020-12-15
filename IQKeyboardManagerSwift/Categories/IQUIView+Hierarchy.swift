@@ -179,9 +179,12 @@ extension UIView {
 
         //	Getting all siblings
         if let superview = superview {
-            for textField in superview.subviews {
-                if (textField == self || !textField.ignoreSwitchingByNextPrevious) && textField.IQcanBecomeFirstResponder() {
-                    tempTextFields.append(textField)
+            for subview in superview.subviews {
+                if subview.IQcanBecomeFirstResponder() {
+                    if subview !== self, let textInput = subview as? TextInputView, textInput.ignoreSwitchingByNextPrevious {
+                        continue
+                    }
+                    tempTextFields.append(subview)
                 }
             }
         }
@@ -199,8 +202,12 @@ extension UIView {
 
         for textField in subviews {
 
-            if (textField == self || textField.ignoreSwitchingByNextPrevious == false), textField.IQcanBecomeFirstResponder() {
-                textfields.append(textField)
+            if textField.IQcanBecomeFirstResponder() {
+                if textField !== self, let textInput = textField as? TextInputView, textInput.ignoreSwitchingByNextPrevious {
+
+                } else {
+                    textfields.append(textField)
+                }
             }
             //Sometimes there are hidden or disabled views and textField inside them still recorded, so we added some more validations here (Bug ID: #458)
             //Uncommented else (Bug ID: #625)

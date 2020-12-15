@@ -26,6 +26,9 @@ import UIKit
 import CoreGraphics
 import QuartzCore
 
+/// Subclasses of UIView that support text input such as UITextField, UITextView and UISearchBar
+typealias TextInputView = UIView & UITextInputTraits
+
 /// Invalid point value.
 private let kIQCGPointInvalid = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: .greatestFiniteMagnitude)
 
@@ -36,7 +39,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
 final public class IQKeyboardManager: NSObject {
 
     /** To save UITextField/UITextView object voa textField/textView notifications. */
-    weak var textFieldView: UIView?
+    weak var textFieldView: TextInputView?
 
     var topViewBeginOrigin: CGPoint = kIQCGPointInvalid
 
@@ -415,13 +418,11 @@ final public class IQKeyboardManager: NSObject {
         var rootViewOrigin = rootController.view.frame.origin
 
         //Maintain keyboardDistanceFromTextField
-        var specialKeyboardDistanceFromTextField = textFieldView.keyboardDistanceFromTextField
+        var newKeyboardDistanceFromTextField = textFieldView.keyboardDistanceFromTextField ?? keyboardDistanceFromTextField
 
-        if let searchBar = textFieldView.textFieldSearchBar() {
-            specialKeyboardDistanceFromTextField = searchBar.keyboardDistanceFromTextField
+        if let searchBar = textFieldView.textFieldSearchBar(), let keyboardDistanceFromTextField = searchBar.keyboardDistanceFromTextField {
+            newKeyboardDistanceFromTextField = keyboardDistanceFromTextField
         }
-
-        let newKeyboardDistanceFromTextField = (specialKeyboardDistanceFromTextField == kIQUseDefaultKeyboardDistance) ? keyboardDistanceFromTextField : specialKeyboardDistanceFromTextField
 
         var kbSize = keyboardFrame.size
 
@@ -570,7 +571,7 @@ final public class IQKeyboardManager: NSObject {
         //  If we found lastScrollView then setting it's contentOffset to show textField.
         if let lastScrollView = lastScrollView {
             //Saving
-            var lastView = textFieldView
+            var lastView: UIView = textFieldView
             var superScrollView = self.lastScrollView
 
             while let scrollView = superScrollView {
@@ -1151,7 +1152,7 @@ final public class IQKeyboardManager: NSObject {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  Getting object
-        textFieldView = notification.object as? UIView
+        textFieldView = notification.object as? TextInputView
 
         if overrideKeyboardAppearance, let textInput = textFieldView as? UITextInput, textInput.keyboardAppearance != keyboardAppearance {
             //Setting textField keyboard appearance and reloading inputViews.
