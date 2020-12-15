@@ -27,7 +27,7 @@ import CoreGraphics
 import QuartzCore
 
 /// Subclasses of UIView that support text input such as UITextField, UITextView and UISearchBar
-typealias TextInputView = UIView & UITextInputTraits
+public typealias TextInputView = UIView & UITextInputTraits
 
 /// Invalid point value.
 private let kIQCGPointInvalid = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: .greatestFiniteMagnitude)
@@ -1152,23 +1152,22 @@ final public class IQKeyboardManager: NSObject {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  Getting object
-        textFieldView = notification.object as? TextInputView
+        let textInputView = notification.object as! TextInputView
+        textFieldView = textInputView
 
-        if overrideKeyboardAppearance, let textInput = textFieldView as? UITextInput, textInput.keyboardAppearance != keyboardAppearance {
-            //Setting textField keyboard appearance and reloading inputViews.
-            if let textFieldView = textFieldView as? UITextField {
-                textFieldView.keyboardAppearance = keyboardAppearance
-            } else if  let textFieldView = textFieldView as? UITextView {
-                textFieldView.keyboardAppearance = keyboardAppearance
+        if textInputView.responds(to: #selector(setter: UITextInputTraits.keyboardAppearance)) {
+            if overrideKeyboardAppearance, textInputView.keyboardAppearance! != keyboardAppearance {
+                //Setting textField keyboard appearance and reloading inputViews.
+                textInputView.perform(#selector(setter: UITextInputTraits.keyboardAppearance), with: keyboardAppearance)
             }
-            textFieldView?.reloadInputViews()
+            textInputView.reloadInputViews()
         }
 
         //If autoToolbar enable, then add toolbar on all the UITextField/UITextView's if required.
         if privateIsEnableAutoToolbar() {
 
             //UITextView special case. Keyboard Notification is firing before textView notification so we need to resign it first and then again set it as first responder to add toolbar on it.
-            if let textView = textFieldView as? UITextView, textView.inputAccessoryView == nil {
+            if textInputView is UITextView && textInputView.inputAccessoryView == nil {
 
                 UIView.animate(withDuration: 0.00001, delay: 0, options: animationCurve, animations: {
 
@@ -1177,7 +1176,7 @@ final public class IQKeyboardManager: NSObject {
                 }, completion: { _ in
 
                     //On textView toolbar didn't appear on first time, so forcing textView to reload it's inputViews.
-                    textView.reloadInputViews()
+                    textInputView.reloadInputViews()
                 })
             } else {
                 //Adding toolbar
@@ -1340,4 +1339,8 @@ extension IQKeyboardManager: UIGestureRecognizerDelegate {
 
         return true
     }
+}
+
+@inlinable func firstIndex(of object: AnyObject, in objects: [AnyObject]) -> Int? {
+    return objects.firstIndex(where: { $0 === object })
 }

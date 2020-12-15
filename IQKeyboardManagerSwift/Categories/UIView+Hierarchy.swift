@@ -102,52 +102,48 @@ extension UIView {
     }
 
     /// Returns all siblings of the receiver which canBecomeFirstResponder.
-    final func responderSiblings() -> [UIView] {
+    final func responderSiblings() -> [TextInputView] {
 
         //Array of (UITextField/UITextView's).
-        var tempTextFields = [UIView]()
+        var textInputViews: [TextInputView] = []
 
         //	Getting all siblings
         if let superview = superview {
             for subview in superview.subviews {
-                if subview.IQcanBecomeFirstResponder() {
-                    if subview !== self, let textInput = subview as? TextInputView, textInput.ignoreSwitchingByNextPrevious {
-                        continue
+                if let textInputView = subview as? TextInputView, textInputView.IQcanBecomeFirstResponder() {
+                    if textInputView == self || !textInputView.ignoreSwitchingByNextPrevious {
+                        textInputViews.append(textInputView)
                     }
-                    tempTextFields.append(subview)
                 }
             }
         }
 
-        return tempTextFields
+        return textInputViews
     }
 
     /// Returns all deep subViews of the receiver which canBecomeFirstResponder.
-    final func deepResponderViews() -> [UIView] {
+    final func deepResponderViews() -> [TextInputView] {
 
         //Array of (UITextField/UITextView's).
-        var textfields = [UIView]()
+        var textInputViews = [TextInputView]()
 
-        for textField in subviews {
-
-            if textField.IQcanBecomeFirstResponder() {
-                if textField !== self, let textInput = textField as? TextInputView, textInput.ignoreSwitchingByNextPrevious {
-
-                } else {
-                    textfields.append(textField)
+        for subview in subviews {
+            if let textInputView = subview as? TextInputView, textInputView.IQcanBecomeFirstResponder() {
+                if textInputView == self || !textInputView.ignoreSwitchingByNextPrevious {
+                    textInputViews.append(textInputView)
                 }
             }
             //Sometimes there are hidden or disabled views and textField inside them still recorded, so we added some more validations here (Bug ID: #458)
             //Uncommented else (Bug ID: #625)
-            else if textField.subviews.count != 0, isUserInteractionEnabled, !isHidden, alpha != 0.0 {
-                for deepView in textField.deepResponderViews() {
-                    textfields.append(deepView)
+            else if subview.subviews.count != 0, isUserInteractionEnabled, !isHidden, alpha != 0.0 {
+                for deepView in subview.deepResponderViews() {
+                    textInputViews.append(deepView)
                 }
             }
         }
 
         //subviews are returning in opposite order. Sorting according the frames 'y'.
-        return textfields.sorted(by: { (view1: UIView, view2: UIView) -> Bool in
+        return textInputViews.sorted(by: { view1, view2 in
 
             let frame1 = view1.convert(view1.bounds, to: self)
             let frame2 = view2.convert(view2.bounds, to: self)
@@ -158,26 +154,6 @@ extension UIView {
                 return frame1.minX < frame2.minX
             }
         })
-    }
-
-    private func IQcanBecomeFirstResponder() -> Bool {
-
-        var IQcanBecomeFirstResponder = false
-
-        if self.conforms(to: UITextInput.self) {
-            //  Setting toolbar to keyboard.
-            if let textView = self as? UITextView {
-                IQcanBecomeFirstResponder = textView.isEditable
-            } else if let textField = self as? UITextField {
-                IQcanBecomeFirstResponder = textField.isEnabled
-            }
-        }
-
-        if IQcanBecomeFirstResponder {
-            IQcanBecomeFirstResponder = isUserInteractionEnabled && !isHidden && alpha != 0.0 && !isAlertViewTextField() && (self as? UITextField)?.textFieldSearchBar() == nil
-        }
-
-        return IQcanBecomeFirstResponder
     }
 
     // MARK: Special TextFields

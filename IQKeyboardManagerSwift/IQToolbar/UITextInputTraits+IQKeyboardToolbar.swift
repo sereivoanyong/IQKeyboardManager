@@ -1,31 +1,13 @@
 //
-//  IQUIView+IQKeyboardToolbar.swift
-// https://github.com/hackiftekhar/IQKeyboardManager
-// Copyright (c) 2013-20 Iftekhar Qurashi.
+//  UITextInputTraits+IQKeyboardToolbar.swift
+//  IQKeyboardManagerSwift
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+//  Created by Sereivoan Yong on 12/15/20.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 
 import UIKit
 
-/**
- IQBarButtonItemConfiguration for creating toolbar with bar button items
- */
+/// IQBarButtonItemConfiguration for creating toolbar with bar button items
 final public class IQBarButtonItemConfiguration: NSObject {
 
     public init(barButtonSystemItem: UIBarButtonItem.SystemItem, action: Selector) {
@@ -179,73 +161,50 @@ public extension UIImage {
     }
 }
 
+private var kKeyboardToolbarKey: Void?
+private var kShouldHideToolbarPlaceholderKey: Void?
+private var kToolbarPlaceholderKey: Void?
+
+// MARK: Private helper
+
+private let flexibleBarButtonItem: IQBarButtonItem = {
+    let nilButton = IQBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    nilButton.isSystemItem = true
+    return nilButton
+}()
+
 /**
 UIView category methods to add IQToolbar on UIKeyboard.
 */
-public extension UIView {
-
-    private struct AssociatedKeys {
-        static var keyboardToolbar = "keyboardToolbar"
-        static var shouldHideToolbarPlaceholder = "shouldHideToolbarPlaceholder"
-        static var toolbarPlaceholder = "toolbarPlaceholder"
-    }
+public extension UITextInputTraits where Self: UIView {
 
     // MARK: Toolbar
 
-    /**
-     IQToolbar references for better customization control.
-     */
+    /// IQToolbar references for better customization control.
     var keyboardToolbar: IQToolbar {
-        var toolbar = inputAccessoryView as? IQToolbar
-
-        if toolbar == nil {
-            toolbar = objc_getAssociatedObject(self, &AssociatedKeys.keyboardToolbar) as? IQToolbar
+        if let toolbar = inputAccessoryView as? IQToolbar ?? objc_getAssociatedObject(self, &kKeyboardToolbarKey) as? IQToolbar {
+            return toolbar
         }
-
-        if let unwrappedToolbar = toolbar {
-            return unwrappedToolbar
-        } else {
-
-            let frame = CGRect(origin: .zero, size: .init(width: UIScreen.main.bounds.width, height: 44))
-            let newToolbar = IQToolbar(frame: frame)
-
-            objc_setAssociatedObject(self, &AssociatedKeys.keyboardToolbar, newToolbar, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
-            return newToolbar
-        }
+        let toolbar = IQToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        objc_setAssociatedObject(self, &kKeyboardToolbarKey, toolbar, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return toolbar
     }
 
     // MARK: Toolbar title
 
-    /**
-    If `shouldHideToolbarPlaceholder` is YES, then title will not be added to the toolbar. Default to NO.
-    */
+    /// If `shouldHideToolbarPlaceholder` is YES, then title will not be added to the toolbar. Default to NO.
     var shouldHideToolbarPlaceholder: Bool {
-        get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.shouldHideToolbarPlaceholder) as? Bool ?? false
-        }
-        set(newValue) {
-            objc_setAssociatedObject(self, &AssociatedKeys.shouldHideToolbarPlaceholder, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            self.keyboardToolbar.titleBarButton.title = self.drawingToolbarPlaceholder
-        }
+        get { return objc_getAssociatedValue(self, &kShouldHideToolbarPlaceholderKey) ?? false }
+        set { objc_setAssociatedValue(self, &kShouldHideToolbarPlaceholderKey, newValue); keyboardToolbar.titleBarButton.title = drawingToolbarPlaceholder }
     }
 
-    /**
-     `toolbarPlaceholder` to override default `placeholder` text when drawing text on toolbar.
-     */
+    /// `toolbarPlaceholder` to override default `placeholder` text when drawing text on toolbar.
     var toolbarPlaceholder: String? {
-        get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.toolbarPlaceholder) as? String
-        }
-        set(newValue) {
-            objc_setAssociatedObject(self, &AssociatedKeys.toolbarPlaceholder, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            self.keyboardToolbar.titleBarButton.title = self.drawingToolbarPlaceholder
-        }
+        get { return objc_getAssociatedValue(self, &kToolbarPlaceholderKey) }
+        set { objc_setAssociatedValue(self, &kToolbarPlaceholderKey, newValue); keyboardToolbar.titleBarButton.title = drawingToolbarPlaceholder }
     }
 
-    /**
-     `drawingToolbarPlaceholder` will be actual text used to draw on toolbar. This would either `placeholder` or `toolbarPlaceholder`.
-     */
+    /// `drawingToolbarPlaceholder` will be actual text used to draw on toolbar. This would either `placeholder` or `toolbarPlaceholder`.
     var drawingToolbarPlaceholder: String? {
 
         if self.shouldHideToolbarPlaceholder {
@@ -264,20 +223,6 @@ public extension UIView {
         } else {
             return nil
         }
-    }
-
-    // MARK: Private helper
-
-    // swiftlint:disable nesting
-    private static func flexibleBarButtonItem () -> IQBarButtonItem {
-
-        struct Static {
-
-            static let nilButton = IQBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        }
-
-        Static.nilButton.isSystemItem = true
-        return Static.nilButton
     }
 
     // MARK: Common
@@ -360,7 +305,7 @@ public extension UIView {
             //Title bar button item
             do {
                 //Flexible space
-                items.append(UIView.flexibleBarButtonItem())
+                items.append(flexibleBarButtonItem)
 
                 //Title button
                 toolbar.titleBarButton.title = titleText
@@ -372,7 +317,7 @@ public extension UIView {
                 items.append(toolbar.titleBarButton)
 
                 //Flexible space
-                items.append(UIView.flexibleBarButtonItem())
+                items.append(flexibleBarButtonItem)
             }
 
             if let rightConfig = rightBarButtonConfiguration {
@@ -408,13 +353,10 @@ public extension UIView {
             //  Adding button to toolBar.
             toolbar.items = items
 
-            if let textInput = self as? UITextInput {
-                switch textInput.keyboardAppearance {
-                case .dark?:
-                    toolbar.barStyle = .black
-                default:
-                    toolbar.barStyle = .default
-                }
+            if let keyboardAppearance = keyboardAppearance, keyboardAppearance == .dark {
+                toolbar.barStyle = .black
+            } else {
+                toolbar.barStyle = .default
             }
 
             //  Setting toolbar to keyboard.

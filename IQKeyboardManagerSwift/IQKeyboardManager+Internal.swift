@@ -27,7 +27,7 @@ import UIKit
 extension IQKeyboardManager {
 
     /**    Get all UITextField/UITextView siblings of textFieldView. */
-    func responderViews() -> [UIView]? {
+    func responderViews() -> [TextInputView]? {
 
         var superConsideredView: UIView?
 

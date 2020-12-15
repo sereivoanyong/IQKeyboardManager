@@ -19,7 +19,7 @@ public enum IQAutoToolbarManageBehaviour: Int {
     case byPosition
 }
 
-extension Array where Element: UIView {
+extension Array where Element: TextInputView {
 
     func sorted(by behaviour: IQAutoToolbarManageBehaviour) -> [Element] {
         switch behaviour {

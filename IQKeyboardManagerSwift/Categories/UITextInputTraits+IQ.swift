@@ -14,6 +14,24 @@ private var kShouldResignOnTouchOutsideModeKey: Void?
 
 extension UITextInputTraits where Self: UIView {
 
+    func IQcanBecomeFirstResponder() -> Bool {
+
+        var IQcanBecomeFirstResponder = false
+
+        //  Setting toolbar to keyboard.
+        if let textView = self as? UITextView {
+            IQcanBecomeFirstResponder = textView.isEditable
+        } else if let textField = self as? UITextField {
+            IQcanBecomeFirstResponder = textField.isEnabled && textField.textFieldSearchBar() == nil
+        }
+
+        if IQcanBecomeFirstResponder {
+            IQcanBecomeFirstResponder = isUserInteractionEnabled && !isHidden && alpha != 0.0 && !isAlertViewTextField()
+        }
+
+        return IQcanBecomeFirstResponder
+    }
+
     /// To set customized distance from keyboard for textField/textView. Can't be less than zero
     public var keyboardDistanceFromTextField: CGFloat? {
         get { return objc_getAssociatedValue(self, &kKeyboardDistanceFromTextFieldKey) }
