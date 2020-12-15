@@ -85,15 +85,15 @@ open class IQBarButtonItem: UIBarButtonItem {
 
 extension IQBarButtonItem {
 
-    public convenience init(target: AnyObject?, configuration: Configuration) {
+    public convenience init(configuration: Configuration) {
         switch configuration.source {
         case .systemItem(let systemItem):
-            self.init(barButtonSystemItem: systemItem, target: target, action: configuration.action)
+            self.init(barButtonSystemItem: systemItem, target: configuration.target, action: configuration.action)
             isSystemItem = true
         case .image(let image):
-            self.init(image: image, style: .plain, target: target, action: configuration.action)
+            self.init(image: image, style: .plain, target: configuration.target, action: configuration.action)
         case .title(let title):
-            self.init(title: title, style: .plain, target: target, action: configuration.action)
+            self.init(title: title, style: .plain, target: configuration.target, action: configuration.action)
         }
     }
 
@@ -115,31 +115,35 @@ extension IQBarButtonItem {
 
         public let title: String?     //Title to show on bar button item if it's not a system item.
 
+        public let target: AnyObject?
         public let action: Selector?  //action for bar button item. Usually 'doneAction:(IQBarButtonItem*)item'.
 
-        public init(systemItem: UIBarButtonItem.SystemItem, action: Selector) {
+        public init(systemItem: SystemItem, target: AnyObject?, action: Selector?) {
             source = .systemItem(systemItem)
             self.systemItem = systemItem
             self.image = nil
             self.title = nil
+            self.target = target
             self.action = action
             super.init()
         }
 
-        public init(image: UIImage?, action: Selector) {
+        public init(image: UIImage?, target: AnyObject?, action: Selector?) {
             source = .image(image!)
             self.systemItem = nil
             self.image = image
             self.title = nil
+            self.target = target
             self.action = action
             super.init()
         }
 
-        public init(title: String, action: Selector) {
+        public init(title: String, target: AnyObject?, action: Selector?) {
             source = .title(title)
             self.systemItem = nil
             self.image = nil
             self.title = title
+            self.target = target
             self.action = action
             super.init()
         }
