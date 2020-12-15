@@ -8,7 +8,92 @@
 
 import UIKit
 
+final class ScrollStackViewController: UIViewController {
+
+    lazy private(set) var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.alwaysBounceVertical = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        scrollView.keyboardDismissMode = .interactive
+        scrollView.layoutMargins = .zero
+        scrollView.preservesSuperviewLayoutMargins = true
+        return scrollView
+    }()
+
+    lazy private(set) var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = 12
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .zero
+        stackView.preservesSuperviewLayoutMargins = true
+        return stackView
+    }()
+
+//    override func loadView() {
+//        view = scrollView
+//    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if #available(iOS 11.0, *) {
+            view.insetsLayoutMarginsFromSafeArea = false
+        }
+
+        scrollView.frame = view.bounds
+        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(scrollView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+
+//        NSLayoutConstraint.activate([
+//            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+//
+//            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//            stackView.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
+//            scrollView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+//            scrollView.rightAnchor.constraint(equalTo: stackView.rightAnchor)
+//        ])
+
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+
+                stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+                stackView.leftAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leftAnchor),
+                scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+                scrollView.contentLayoutGuide.rightAnchor.constraint(equalTo: stackView.rightAnchor)
+            ])
+        }
+
+        for _ in 1...20 {
+            let textField = UITextField()
+            textField.borderStyle = .roundedRect
+            stackView.addArrangedSubview(textField)
+        }
+    }
+
+    @available(iOS 11.0, *)
+    override func viewLayoutMarginsDidChange() {
+        super.viewLayoutMarginsDidChange()
+        print(view.layoutMargins)
+    }
+}
+
 class TableViewInContainerViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
+
+    @IBAction func showDemo(_ sender: UIBarButtonItem) {
+        let scrollStackViewController = ScrollStackViewController()
+        let navigationController = UINavigationController(rootViewController: scrollStackViewController)
+        present(navigationController, animated: true, completion: nil)
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 30

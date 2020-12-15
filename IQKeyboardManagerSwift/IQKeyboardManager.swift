@@ -115,6 +115,7 @@ final public class IQKeyboardManager: NSObject {
     public var enable = false {
 
         didSet {
+            _ = UIScrollView.swizzle
             //If not enable, enable it.
             if enable, !oldValue {
                 //If keyboard is currently showing. Sending a fake notification for keyboardWillHide to retain view's original position.
@@ -132,7 +133,7 @@ final public class IQKeyboardManager: NSObject {
     /**
     To set keyboard distance from textField. can't be less than zero. Default is 10.0.
     */
-    public var keyboardDistanceFromTextField: CGFloat = 10.0
+    public var keyboardDistanceFromTextField: CGFloat = 0.0
 
     // MARK: IQToolbar handling
 
@@ -407,7 +408,7 @@ final public class IQKeyboardManager: NSObject {
             let rootController = textFieldView.parentContainerViewController(),
             let window = textFieldView.window,
             let textFieldViewRectInWindow = textFieldView.superview?.convert(textFieldView.frame, to: window),
-            let textFieldViewRectInRootSuperview = textFieldView.superview?.convert(textFieldView.frame, to: rootController.view?.superview) else {
+            let textFieldViewRectInRootSuperview = textFieldView.superview?.convert(textFieldView.frame, to: rootController.view) else {
                 return
         }
 
@@ -442,25 +443,19 @@ final public class IQKeyboardManager: NSObject {
             }
         }
 
-        let statusBarHeight: CGFloat
-        if #available(iOS 13, *) {
-            statusBarHeight = window.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        let topLayoutGuide: CGFloat
+        if #available(iOS 11.0, *) {
+            topLayoutGuide = rootController.view.safeAreaInsets.top
         } else {
-            statusBarHeight = UIApplication.shared.statusBarFrame.height
+            topLayoutGuide = rootController.topLayoutGuide.length
         }
-
-        let navigationBarAreaHeight: CGFloat = statusBarHeight + ( rootController.navigationController?.navigationBar.frame.height ?? 0)
-        let layoutAreaHeight: CGFloat = rootController.view.layoutMargins.bottom
-
-        let topLayoutGuide: CGFloat = max(navigationBarAreaHeight, layoutAreaHeight) + 5
-        let bottomLayoutGuide: CGFloat = textFieldView is UITextView ? 0 : rootController.view.layoutMargins.bottom  //Validation of textView for case where there is a tab bar at the bottom or running on iPhone X and textView is at the bottom.
 
         //  Move positive = textField is hidden.
         //  Move negative = textField is showing.
         //  Calculating move position.
-        var move: CGFloat = min(textFieldViewRectInRootSuperview.minY-(topLayoutGuide), textFieldViewRectInWindow.maxY-(window.frame.height-kbSize.height)+bottomLayoutGuide)
-
+        var move: CGFloat = min(textFieldViewRectInRootSuperview.minY-topLayoutGuide, textFieldViewRectInWindow.maxY - (window.bounds.height - kbSize.height))
         showLog("Need to move: \(move)")
+        print("Move", move)
 
         var superScrollView: UIScrollView?
         var superView = textFieldView.superview(of: UIScrollView.self)
@@ -579,7 +574,7 @@ final public class IQKeyboardManager: NSObject {
                 var shouldContinue = false
 
                 if move > 0 {
-                    shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.contentInset.top)
+                    shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.adjustedContentInsetIfAvailable.top)
 
                 } else if let tableView = scrollView.superview(of: UITableView.self) {
 
@@ -609,10 +604,10 @@ final public class IQKeyboardManager: NSObject {
                     }
                 } else {
 
-                    shouldContinue = textFieldViewRectInRootSuperview.origin.y < topLayoutGuide
+                    shouldContinue = textFieldViewRectInRootSuperview.origin.y - scrollView.adjustedContentInsetIfAvailable.top < -scrollView.contentInset.top
 
                     if shouldContinue {
-                        move = min(0, textFieldViewRectInRootSuperview.origin.y - topLayoutGuide)
+                        move = min(0, textFieldViewRectInRootSuperview.origin.y - scrollView.safeAreaInsetsIfAvailable.top)
                     }
                 }
 
@@ -635,7 +630,7 @@ final public class IQKeyboardManager: NSObject {
                     if let lastViewRect = lastView.superview?.convert(lastView.frame, to: scrollView) {
 
                         //Calculating the expected Y offset from move and scrollView's contentOffset.
-                        var shouldOffsetY = scrollView.contentOffset.y - min(scrollView.contentOffset.y, -move)
+                        var shouldOffsetY = scrollView.contentOffset.y + move
 
                         //Rearranging the expected Y offset according to the view.
                         shouldOffsetY = min(shouldOffsetY, lastViewRect.origin.y)
@@ -708,9 +703,10 @@ final public class IQKeyboardManager: NSObject {
 
             //Updating contentInset
             if let lastScrollViewRect = lastScrollView.superview?.convert(lastScrollView.frame, to: window),
-                !lastScrollView.shouldIgnoreContentInsetAdjustment {
+                lastScrollView.shouldIgnoreContentInsetAdjustment == false {
 
-                var bottomInset: CGFloat = (kbSize.height)-(window.frame.height-lastScrollViewRect.maxY)
+//                let lastScrollViewFrameInWindow = rootController.view.convert(lastScrollView.frame, to: window)
+                var bottomInset: CGFloat = lastScrollView.frame.maxY-(lastScrollViewRect.height-kbSize.height)
                 var bottomScrollIndicatorInset = bottomInset - newKeyboardDistanceFromTextField
 
                 // Update the insets so that the scroll vew doesn't shift incorrectly when the offset is near the bottom of the scroll view.
@@ -832,7 +828,7 @@ final public class IQKeyboardManager: NSObject {
 
             //  disturbDistance Negative = frame disturbed.
             //  disturbDistance positive = frame not disturbed.
-            if disturbDistance <= 0 {
+            if disturbDistance < 0 {
 
                 rootViewOrigin.y -= max(move, disturbDistance)
 
@@ -1155,12 +1151,18 @@ final public class IQKeyboardManager: NSObject {
         let textInputView = notification.object as! TextInputView
         textFieldView = textInputView
 
-        if textInputView.responds(to: #selector(setter: UITextInputTraits.keyboardAppearance)) {
-            if overrideKeyboardAppearance, textInputView.keyboardAppearance! != keyboardAppearance {
-                //Setting textField keyboard appearance and reloading inputViews.
-                textInputView.perform(#selector(setter: UITextInputTraits.keyboardAppearance), with: keyboardAppearance)
+        if let textField = textInputView as? UITextField {
+            textField.preventsScrollingSelectionToVisible = true
+        }
+
+        if overrideKeyboardAppearance, let textInput = textFieldView, textInput.keyboardAppearance != keyboardAppearance {
+            //Setting textField keyboard appearance and reloading inputViews.
+            if let textFieldView = textFieldView as? UITextField {
+                textFieldView.keyboardAppearance = keyboardAppearance
+            } else if  let textFieldView = textFieldView as? UITextView {
+                textFieldView.keyboardAppearance = keyboardAppearance
             }
-            textInputView.reloadInputViews()
+            textFieldView?.reloadInputViews()
         }
 
         //If autoToolbar enable, then add toolbar on all the UITextField/UITextView's if required.
@@ -1232,6 +1234,10 @@ final public class IQKeyboardManager: NSObject {
 
         let startTime = CACurrentMediaTime()
         showLog("****** \(#function) started ******", indentation: 1)
+
+        if let textField = notification.object as? UITextField {
+            textField.preventsScrollingSelectionToVisible = false
+        }
 
         //Removing gesture recognizer   (Enhancement ID: #14)
         textFieldView?.window?.removeGestureRecognizer(resignFirstResponderGesture)
@@ -1338,6 +1344,84 @@ extension IQKeyboardManager: UIGestureRecognizerDelegate {
         }
 
         return true
+    }
+}
+
+extension UIView {
+
+    @inlinable var safeAreaInsetsIfAvailable: UIEdgeInsets {
+        if #available(iOS 11.0, *) {
+            return safeAreaInsets
+        } else {
+            return .zero
+        }
+    }
+
+    final func superview<T: UIView>(of type: T.Type) -> T? {
+        if let superview = superview {
+            if let superview = superview as? T {
+                return superview
+            }
+            return superview.superview(of: type)
+        }
+        return nil
+    }
+
+    final func subview<T>(of type: T.Type, where predicate: (T) -> Bool) -> T? {
+        for subview in subviews {
+            if let subview = subview as? T, predicate(subview) {
+                return subview
+            }
+            if let nextSubview = subview.subview(of: type, where: predicate) {
+                return nextSubview
+            }
+        }
+        return nil
+    }
+}
+
+extension UITextField {
+
+    private static var preventsScrollingSelectionToVisibleKey: Void?
+    var preventsScrollingSelectionToVisible: Bool {
+        get { return objc_getAssociatedObject(self, &Self.preventsScrollingSelectionToVisibleKey) as? Bool ?? false }
+        set { objc_setAssociatedObject(self, &Self.preventsScrollingSelectionToVisibleKey, newValue, .OBJC_ASSOCIATION_ASSIGN) }
+    }
+}
+
+extension UIScrollView {
+
+    @inlinable var adjustedContentInsetIfAvailable: UIEdgeInsets {
+        if #available(iOS 11.0, *) {
+            return adjustedContentInset
+        } else {
+            return contentInset
+        }
+    }
+
+    static let swizzle: Void = {
+        method_exchangeImplementations(
+            class_getInstanceMethod(UIScrollView.self, #selector(scrollRectToVisible(_:animated:)))!,
+            class_getInstanceMethod(UIScrollView.self, #selector(iq_scrollRectToVisible(_:animated:)))!
+        )
+        method_exchangeImplementations(
+            class_getInstanceMethod(UIScrollView.self, #selector(setContentOffset(_:animated:)))!,
+            class_getInstanceMethod(UIScrollView.self, #selector(iq_setContentOffset(_:animated:)))!
+        )
+    }()
+
+    @objc private func iq_setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
+        if contentOffset == .zero {
+            print("Found")
+        }
+        iq_setContentOffset(contentOffset, animated: animated)
+    }
+
+    @objc private func iq_scrollRectToVisible(_ rect: CGRect, animated: Bool) {
+        if let textField = subview(of: UITextField.self, where: { $0.isFirstResponder }), textField.preventsScrollingSelectionToVisible {
+            return
+        }
+        iq_scrollRectToVisible(rect, animated: animated)
     }
 }
 

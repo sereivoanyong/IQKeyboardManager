@@ -682,7 +682,7 @@
 					};
 					C0ACB0F419CF104B0057B571 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 7UUTF6T5P9;
+						DevelopmentTeam = QHQ974WAF6;
 						LastSwiftMigration = 1020;
 					};
 					C0B63B9A1781FAB1008D3B64 = {
@@ -1121,6 +1121,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 6.5.7;
+				DEVELOPMENT_TEAM = QHQ974WAF6;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
