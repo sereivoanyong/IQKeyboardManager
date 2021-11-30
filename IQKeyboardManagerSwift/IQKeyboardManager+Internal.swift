@@ -25,10 +25,10 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-internal extension IQKeyboardManager {
+extension IQKeyboardManager {
 
     /**    Get all UITextField/UITextView siblings of textFieldView. */
-    func responderViews() -> [UIView]? {
+    func responderViews() -> [UITextInputView]? {
 
         var superConsideredView: UIView?
 
@@ -73,12 +73,7 @@ internal extension IQKeyboardManager {
             isEnabled = true
         } else if enableMode == .disabled {
             isEnabled = false
-        } else if var textFieldViewController = textFieldView?.viewContainingController() {
-
-            //If it is searchBar textField embedded in Navigation Bar
-            if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
-                textFieldViewController = topController
-            }
+        } else if let textFieldViewController = textFieldView?.viewContainingController() {
 
             //If viewController is kind of enable viewController class, then assuming it's enabled.
             if !isEnabled, enabledDistanceHandlingClasses.contains(where: { textFieldViewController.isKind(of: $0) }) {
@@ -110,13 +105,8 @@ internal extension IQKeyboardManager {
 
     func privateIsEnableAutoToolbar() -> Bool {
 
-        guard var textFieldViewController = textFieldView?.viewContainingController() else {
+        guard let textFieldViewController = textFieldView?.viewContainingController() else {
             return enableAutoToolbar
-        }
-
-        //If it is searchBar textField embedded in Navigation Bar
-        if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
-            textFieldViewController = topController
         }
 
         var enableToolbar = enableAutoToolbar
@@ -157,12 +147,7 @@ internal extension IQKeyboardManager {
             shouldResign = true
         } else if enableMode == .disabled {
             shouldResign = false
-        } else if var textFieldViewController = textFieldView?.viewContainingController() {
-
-            //If it is searchBar textField embedded in Navigation Bar
-            if textFieldView?.textFieldSearchBar() != nil, let navController = textFieldViewController as? UINavigationController, let topController = navController.topViewController {
-                textFieldViewController = topController
-            }
+        } else if let textFieldViewController = textFieldView?.viewContainingController() {
 
             //If viewController is kind of enable viewController class, then assuming shouldResignOnTouchOutside is enabled.
             if !shouldResign, enabledTouchResignedClasses.contains(where: { textFieldViewController.isKind(of: $0) }) {

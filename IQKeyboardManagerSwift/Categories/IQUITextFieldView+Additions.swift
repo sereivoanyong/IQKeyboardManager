@@ -30,23 +30,23 @@ Uses default keyboard distance for textField.
 @available(iOSApplicationExtension, unavailable)
 public let kIQUseDefaultKeyboardDistance = CGFloat.greatestFiniteMagnitude
 
+private struct AssociatedKeys {
+    static var keyboardDistanceFromTextField = "keyboardDistanceFromTextField"
+    static var ignoreSwitchingByNextPrevious = "ignoreSwitchingByNextPrevious"
+    static var enableMode = "enableMode"
+    static var shouldResignOnTouchOutsideMode = "shouldResignOnTouchOutsideMode"
+}
+
 /**
 UIView category for managing UITextField/UITextView
 */
 @available(iOSApplicationExtension, unavailable)
-@objc public extension UIView {
-
-    private struct AssociatedKeys {
-        static var keyboardDistanceFromTextField = "keyboardDistanceFromTextField"
-        static var ignoreSwitchingByNextPrevious = "ignoreSwitchingByNextPrevious"
-        static var enableMode = "enableMode"
-        static var shouldResignOnTouchOutsideMode = "shouldResignOnTouchOutsideMode"
-    }
+extension UITextInput where Self: UIView {
 
     /**
      To set customized distance from keyboard for textField/textView. Can't be less than zero
      */
-    var keyboardDistanceFromTextField: CGFloat {
+    public var keyboardDistanceFromTextField: CGFloat {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.keyboardDistanceFromTextField) as? CGFloat ?? kIQUseDefaultKeyboardDistance
         }
@@ -58,7 +58,7 @@ UIView category for managing UITextField/UITextView
     /**
      If shouldIgnoreSwitchingByNextPrevious is true then library will ignore this textField/textView while moving to other textField/textView using keyboard toolbar next previous buttons. Default is false
      */
-    var ignoreSwitchingByNextPrevious: Bool {
+    public var ignoreSwitchingByNextPrevious: Bool {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.ignoreSwitchingByNextPrevious) as? Bool ?? false
         }
@@ -70,7 +70,7 @@ UIView category for managing UITextField/UITextView
     /**
      Override Enable/disable managing distance between keyboard and textField behaviour for this particular textField.
      */
-    var enableMode: IQEnableMode {
+    public var enableMode: IQEnableMode {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.enableMode) as? IQEnableMode ?? .default
         }
@@ -82,7 +82,7 @@ UIView category for managing UITextField/UITextView
     /**
      Override resigns Keyboard on touching outside of UITextField/View behaviour for this particular textField.
      */
-    var shouldResignOnTouchOutsideMode: IQEnableMode {
+    public var shouldResignOnTouchOutsideMode: IQEnableMode {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.shouldResignOnTouchOutsideMode) as? IQEnableMode ?? .default
         }

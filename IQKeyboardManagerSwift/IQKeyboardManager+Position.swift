@@ -176,11 +176,7 @@ public extension IQKeyboardManager {
         var rootViewOrigin = rootController.view.frame.origin
 
         //Maintain keyboardDistanceFromTextField
-        var specialKeyboardDistanceFromTextField = textFieldView.keyboardDistanceFromTextField
-
-        if let searchBar = textFieldView.textFieldSearchBar() {
-            specialKeyboardDistanceFromTextField = searchBar.keyboardDistanceFromTextField
-        }
+        let specialKeyboardDistanceFromTextField = textFieldView.keyboardDistanceFromTextField
 
         let newKeyboardDistanceFromTextField = (specialKeyboardDistanceFromTextField == kIQUseDefaultKeyboardDistance) ? keyboardDistanceFromTextField : specialKeyboardDistanceFromTextField
 
@@ -324,7 +320,7 @@ public extension IQKeyboardManager {
         //  If we found lastScrollView then setting it's contentOffset to show textField.
         if let lastScrollView = lastScrollView {
             //Saving
-            var lastView = textFieldView
+          var lastView: UIView = textFieldView
             var superScrollView = self.lastScrollView
 
             while let scrollView = superScrollView {

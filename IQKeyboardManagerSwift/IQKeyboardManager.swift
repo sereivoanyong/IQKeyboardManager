@@ -26,6 +26,9 @@ import UIKit
 import CoreGraphics
 import QuartzCore
 
+/// Placeholder typealias for `UITextField` and `UITextView`
+public typealias UITextInputView = UIView & UITextInput
+
 // MARK: IQToolbar tags
 
 /**
@@ -387,7 +390,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
     // MARK: UITextFieldViewNotification
 
     /** To save UITextField/UITextView object voa textField/textView notifications. */
-    weak var textFieldView: UIView?
+    weak var textFieldView: UITextInputView?
 
     var topViewBeginOrigin: CGPoint = IQKeyboardManager.kIQCGPointInvalid
 
@@ -406,16 +409,14 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  Getting object
-        textFieldView = notification.object as? UIView
+        textFieldView = notification.object as? UITextInputView
 
-        if overrideKeyboardAppearance, let textInput = textFieldView as? UITextInput, textInput.keyboardAppearance != keyboardAppearance {
+        if overrideKeyboardAppearance, let textInputView = textFieldView, textInputView.keyboardAppearance != keyboardAppearance {
             //Setting textField keyboard appearance and reloading inputViews.
-            if let textFieldView = textFieldView as? UITextField {
-                textFieldView.keyboardAppearance = keyboardAppearance
-            } else if  let textFieldView = textFieldView as? UITextView {
-                textFieldView.keyboardAppearance = keyboardAppearance
+            if textInputView.responds(to: #selector(setter: UITextInputTraits.keyboardAppearance)) {
+                textInputView.perform(#selector(setter: UITextInputTraits.keyboardAppearance), with: keyboardAppearance)
             }
-            textFieldView?.reloadInputViews()
+            textInputView.reloadInputViews()
         }
 
         //If autoToolbar enable, then add toolbar on all the UITextField/UITextView's if required.
