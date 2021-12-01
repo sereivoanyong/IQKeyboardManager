@@ -34,7 +34,7 @@ extension IQKeyboardManager {
 
         //If find any consider responderView in it's upper hierarchy then will get deepResponderView.
         for disabledClass in toolbarPreviousNextAllowedClasses {
-            superConsideredView = textFieldView?.superviewOfClassType(disabledClass)
+            superConsideredView = textFieldView?.superview(of: disabledClass)
             if superConsideredView != nil {
                 break
             }

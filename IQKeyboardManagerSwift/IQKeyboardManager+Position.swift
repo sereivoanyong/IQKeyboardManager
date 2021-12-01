@@ -220,7 +220,7 @@ public extension IQKeyboardManager {
         showLog("Need to move: \(move)")
 
         var superScrollView: UIScrollView?
-        var superView = textFieldView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+        var superView = textFieldView.superview(of: UIScrollView.self)
 
         //Getting UIScrollView whose scrolling is enabled.    //  (Bug ID: #285)
         while let view = superView {
@@ -230,7 +230,7 @@ public extension IQKeyboardManager {
                 break
             } else {
                 //  Getting it's superScrollView.   //  (Enhancement ID: #21, #24)
-                superView = view.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                superView = view.superview(of: UIScrollView.self)
             }
         }
 
@@ -251,7 +251,7 @@ public extension IQKeyboardManager {
                 if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
-                    let animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
+                    let animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 
                     if animatedContentOffset {
                         lastScrollView.setContentOffset(startingContentOffset, animated: UIView.areAnimationsEnabled)
@@ -278,7 +278,7 @@ public extension IQKeyboardManager {
                 if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
-                    let animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
+                    let animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 
                     if animatedContentOffset {
                         lastScrollView.setContentOffset(startingContentOffset, animated: UIView.areAnimationsEnabled)
@@ -330,11 +330,11 @@ public extension IQKeyboardManager {
                 if move > 0 {
                     shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.contentInset.top)
 
-                } else if let tableView = scrollView.superviewOfClassType(UITableView.self) as? UITableView {
+                } else if let tableView = scrollView.superview(of: UITableView.self) {
 
                     shouldContinue = scrollView.contentOffset.y > 0
 
-                    if shouldContinue, let tableCell = textFieldView.superviewOfClassType(UITableViewCell.self) as? UITableViewCell, let indexPath = tableView.indexPath(for: tableCell), let previousIndexPath = tableView.previousIndexPath(of: indexPath) {
+                    if shouldContinue, let tableCell = textFieldView.superview(of: UITableViewCell.self), let indexPath = tableView.indexPath(for: tableCell), let previousIndexPath = tableView.previousIndexPath(of: indexPath) {
 
                         let previousCellRect = tableView.rectForRow(at: previousIndexPath)
                         if !previousCellRect.isEmpty {
@@ -343,11 +343,11 @@ public extension IQKeyboardManager {
                             move = min(0, previousCellRectInRootSuperview.maxY - topLayoutGuide)
                         }
                     }
-                } else if let collectionView = scrollView.superviewOfClassType(UICollectionView.self) as? UICollectionView {
+                } else if let collectionView = scrollView.superview(of: UICollectionView.self) {
 
                     shouldContinue = scrollView.contentOffset.y > 0
 
-                    if shouldContinue, let collectionCell = textFieldView.superviewOfClassType(UICollectionViewCell.self) as? UICollectionViewCell, let indexPath = collectionView.indexPath(for: collectionCell), let previousIndexPath = collectionView.previousIndexPath(of: indexPath), let attributes = collectionView.layoutAttributesForItem(at: previousIndexPath) {
+                    if shouldContinue, let collectionCell = textFieldView.superview(of: UICollectionViewCell.self), let indexPath = collectionView.indexPath(for: collectionCell), let previousIndexPath = collectionView.previousIndexPath(of: indexPath), let attributes = collectionView.layoutAttributesForItem(at: previousIndexPath) {
 
                         let previousCellRect = attributes.frame
                         if !previousCellRect.isEmpty {
@@ -368,7 +368,7 @@ public extension IQKeyboardManager {
                 //Looping in upper hierarchy until we don't found any scrollView in it's upper hirarchy till UIWindow object.
                 if shouldContinue {
 
-                    var tempScrollView = scrollView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                    var tempScrollView = scrollView.superview(of: UIScrollView.self)
                     var nextScrollView: UIScrollView?
                     while let view = tempScrollView {
 
@@ -376,7 +376,7 @@ public extension IQKeyboardManager {
                             nextScrollView = view
                             break
                         } else {
-                            tempScrollView = view.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                            tempScrollView = view.superview(of: UIScrollView.self)
                         }
                     }
 
@@ -427,7 +427,7 @@ public extension IQKeyboardManager {
                             //Getting problem while using `setContentOffset:animated:`, So I used animation API.
                             UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
 
-                                let animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: scrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
+                                let animatedContentOffset = textFieldView.superview(of: UIStackView.self, belowView: scrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 
                                 if animatedContentOffset {
                                     scrollView.setContentOffset(newContentOffset, animated: UIView.areAnimationsEnabled)

@@ -234,7 +234,7 @@ public extension IQKeyboardManager {
                 if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != self.startingContentOffset {
                     self.showLog("Restoring contentOffset to: \(self.startingContentOffset)")
 
-                    let animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
+                    let animatedContentOffset = self.textFieldView?.superview(of: UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 
                     if animatedContentOffset {
                         lastScrollView.setContentOffset(self.startingContentOffset, animated: UIView.areAnimationsEnabled)
@@ -258,7 +258,7 @@ public extension IQKeyboardManager {
                         let newContentOffset = CGPoint(x: scrollView.contentOffset.x, y: minimumY)
                         if scrollView.contentOffset != newContentOffset {
 
-                            let animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: scrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
+                            let animatedContentOffset = self.textFieldView?.superview(of: UIStackView.self, belowView: scrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 
                             if animatedContentOffset {
                                 scrollView.setContentOffset(newContentOffset, animated: UIView.areAnimationsEnabled)
@@ -270,7 +270,7 @@ public extension IQKeyboardManager {
                         }
                     }
 
-                    superScrollView = scrollView.superviewOfClassType(UIScrollView.self) as? UIScrollView
+                    superScrollView = scrollView.superview(of: UIScrollView.self)
                 }
             })
         }
