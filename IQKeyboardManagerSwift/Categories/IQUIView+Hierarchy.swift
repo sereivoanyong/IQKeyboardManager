@@ -69,7 +69,7 @@ extension UIView {
 
             var matchController: UIResponder? = viewContainingController()
 
-            while let mController = matchController as? UIViewController, controllersHierarchy.contains(mController) == false {
+            while let mController = matchController as? UIViewController, !controllersHierarchy.contains(mController) {
 
                 repeat {
                     matchController = matchController?.next
@@ -101,9 +101,9 @@ extension UIView {
             var parentController: UIViewController = navController
 
             while let parent = parentController.parent,
-                (parent.isKind(of: UINavigationController.self) == false &&
-                    parent.isKind(of: UITabBarController.self) == false &&
-                    parent.isKind(of: UISplitViewController.self) == false) {
+                (!parent.isKind(of: UINavigationController.self) &&
+                    !parent.isKind(of: UITabBarController.self) &&
+                    !parent.isKind(of: UISplitViewController.self)) {
 
                         parentController = parent
             }
@@ -122,9 +122,9 @@ extension UIView {
             }
         } else {
             while let parentController = matchController?.parent,
-                (parentController.isKind(of: UINavigationController.self) == false &&
-                    parentController.isKind(of: UITabBarController.self) == false &&
-                    parentController.isKind(of: UISplitViewController.self) == false) {
+                (!parentController.isKind(of: UINavigationController.self) &&
+                    !parentController.isKind(of: UITabBarController.self) &&
+                    !parentController.isKind(of: UISplitViewController.self)) {
 
                         matchController = parentController
             }

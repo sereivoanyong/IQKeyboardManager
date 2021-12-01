@@ -248,7 +248,7 @@ public extension IQKeyboardManager {
                     })
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
                     let animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
@@ -275,7 +275,7 @@ public extension IQKeyboardManager {
                     })
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != startingContentOffset {
                     showLog("Restoring contentOffset to: \(startingContentOffset)")
 
                     let animatedContentOffset = textFieldView.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
@@ -419,7 +419,7 @@ public extension IQKeyboardManager {
 
                         let newContentOffset = CGPoint(x: scrollView.contentOffset.x, y: shouldOffsetY)
 
-                        if scrollView.contentOffset.equalTo(newContentOffset) == false {
+                        if scrollView.contentOffset != newContentOffset {
 
                             showLog("old contentOffset: \(scrollView.contentOffset) new contentOffset: \(newContentOffset)")
                             self.showLog("Remaining Move: \(move)")
@@ -455,7 +455,7 @@ public extension IQKeyboardManager {
 
             //Updating contentInset
             if let lastScrollViewRect = lastScrollView.superview?.convert(lastScrollView.frame, to: window),
-                lastScrollView.shouldIgnoreContentInsetAdjustment == false {
+                !lastScrollView.shouldIgnoreContentInsetAdjustment {
 
                 var bottomInset: CGFloat = (kbSize.height)-(window.frame.height-lastScrollViewRect.maxY)
                 var bottomScrollIndicatorInset = bottomInset - newKeyboardDistanceFromTextField
@@ -553,7 +553,7 @@ public extension IQKeyboardManager {
 
             rootViewOrigin.y = max(rootViewOrigin.y - move, min(0, -(kbSize.height-newKeyboardDistanceFromTextField)))
 
-            if rootController.view.frame.origin.equalTo(rootViewOrigin) == false {
+            if rootController.view.frame.origin != rootViewOrigin {
                 showLog("Moving Upward")
 
                 UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
@@ -583,7 +583,7 @@ public extension IQKeyboardManager {
 
                 rootViewOrigin.y -= max(move, disturbDistance)
 
-                if rootController.view.frame.origin.equalTo(rootViewOrigin) == false {
+                if rootController.view.frame.origin != rootViewOrigin {
                     showLog("Moving Downward")
                     //  Setting adjusted rootViewRect
                     //  Setting adjusted rootViewRect
@@ -618,11 +618,11 @@ public extension IQKeyboardManager {
         hasPendingAdjustRequest = false
 
         //  Setting rootViewController frame to it's original position. //  (Bug ID: #18)
-        guard topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) == false, let rootViewController = rootViewController else {
+        guard topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid, let rootViewController = rootViewController else {
             return
         }
 
-        if rootViewController.view.frame.origin.equalTo(self.topViewBeginOrigin) == false {
+        if rootViewController.view.frame.origin != self.topViewBeginOrigin {
             //Used UIViewAnimationOptionBeginFromCurrentState to minimize strange animations.
             UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
 

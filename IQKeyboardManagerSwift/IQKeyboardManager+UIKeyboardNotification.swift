@@ -128,7 +128,7 @@ public extension IQKeyboardManager {
         showLog("****** \(#function) started ******", indentation: 1)
 
         //  (Bug ID: #5)
-        if let textFieldView = textFieldView, topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) {
+        if let textFieldView = textFieldView, topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {
 
             //  keyboard is not showing(At the beginning only). We should save rootViewRect.
             rootViewController = textFieldView.parentContainerViewController()
@@ -148,13 +148,13 @@ public extension IQKeyboardManager {
         }
 
         //If last restored keyboard size is different(any orientation accure), then refresh. otherwise not.
-        if keyboardFrame.equalTo(oldKBFrame) == false {
+        if keyboardFrame != oldKBFrame {
 
             //If textFieldView is inside UITableViewController then let UITableViewController to handle it (Bug ID: #37) (Bug ID: #76) See note:- https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html If it is UIAlertView textField then do not affect anything (Bug ID: #70).
 
             if keyboardShowing,
                 let textFieldView = textFieldView,
-                textFieldView.isAlertViewTextField() == false {
+                !textFieldView.isAlertViewTextField() {
 
                 //  keyboard is already showing. adjust position.
                 optimizedAdjustPosition()
@@ -171,7 +171,7 @@ public extension IQKeyboardManager {
         guard privateIsEnabled(),
             let textFieldView = textFieldView,
             let parentController = textFieldView.parentContainerViewController(), (parentController.modalPresentationStyle == UIModalPresentationStyle.formSheet || parentController.modalPresentationStyle == UIModalPresentationStyle.pageSheet),
-            textFieldView.isAlertViewTextField() == false else {
+            !textFieldView.isAlertViewTextField() else {
                 return
         }
 
@@ -231,7 +231,7 @@ public extension IQKeyboardManager {
                     lastScrollView.scrollIndicatorInsets = self.startingScrollIndicatorInsets
                 }
 
-                if lastScrollView.shouldRestoreScrollViewContentOffset, !lastScrollView.contentOffset.equalTo(self.startingContentOffset) {
+                if lastScrollView.shouldRestoreScrollViewContentOffset, lastScrollView.contentOffset != self.startingContentOffset {
                     self.showLog("Restoring contentOffset to: \(self.startingContentOffset)")
 
                     let animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: lastScrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
@@ -256,7 +256,7 @@ public extension IQKeyboardManager {
                     if minimumY < scrollView.contentOffset.y {
 
                         let newContentOffset = CGPoint(x: scrollView.contentOffset.x, y: minimumY)
-                        if scrollView.contentOffset.equalTo(newContentOffset) == false {
+                        if scrollView.contentOffset != newContentOffset {
 
                             let animatedContentOffset = self.textFieldView?.superviewOfClassType(UIStackView.self, belowView: scrollView) != nil  //  (Bug ID: #1365, #1508, #1541)
 

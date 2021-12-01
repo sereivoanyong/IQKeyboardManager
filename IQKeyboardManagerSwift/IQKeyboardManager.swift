@@ -380,8 +380,8 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
 
         guard privateIsEnabled(),
             keyboardShowing,
-            topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) == false, let textFieldView = textFieldView,
-            textFieldView.isAlertViewTextField() == false else {
+            topViewBeginOrigin != IQKeyboardManager.kIQCGPointInvalid, let textFieldView = textFieldView,
+            !textFieldView.isAlertViewTextField() else {
                 return
         }
         optimizedAdjustPosition()
@@ -446,11 +446,11 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
         resignFirstResponderGesture.isEnabled = privateShouldResignOnTouchOutside()
         textFieldView?.window?.addGestureRecognizer(resignFirstResponderGesture)    //   (Enhancement ID: #14)
 
-        if privateIsEnabled() == false {
+        if !privateIsEnabled() {
             restorePosition()
             topViewBeginOrigin = IQKeyboardManager.kIQCGPointInvalid
         } else {
-            if topViewBeginOrigin.equalTo(IQKeyboardManager.kIQCGPointInvalid) {    //  (Bug ID: #5)
+            if topViewBeginOrigin == IQKeyboardManager.kIQCGPointInvalid {    //  (Bug ID: #5)
 
                 rootViewController = textFieldView?.parentContainerViewController()
 
@@ -473,7 +473,7 @@ Codeless drop-in universal library allows to prevent issues of keyboard sliding 
             //See notes:- https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html If it is UIAlertView textField then do not affect anything (Bug ID: #70).
             if keyboardShowing,
                 let textFieldView = textFieldView,
-                textFieldView.isAlertViewTextField() == false {
+                !textFieldView.isAlertViewTextField() {
 
                 //  keyboard is already showing. adjust position.
                 optimizedAdjustPosition()
