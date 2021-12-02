@@ -211,34 +211,44 @@ public extension IQKeyboardManager {
             }
         }
 
+        var superScrollView: UIScrollView?
+        do {
+            var superView = textFieldView.superview(of: UIScrollView.self)
+
+            //Getting UIScrollView whose scrolling is enabled.    //  (Bug ID: #285)
+            while let view = superView {
+
+                if view.isScrollEnabled, !view.shouldIgnoreScrollingAdjustment {
+                    superScrollView = view
+                    break
+                } else {
+                    //  Getting it's superScrollView.   //  (Enhancement ID: #21, #24)
+                    superView = view.superview(of: UIScrollView.self)
+                }
+            }
+        }
+
         let topSafeAreaInset: CGFloat
+        let bottomSafeAreaInset: CGFloat
         if #available(iOS 11.0, *) {
-            topSafeAreaInset = rootController.view.safeAreaInsets.top
+            let safeAreaInsets = rootController.view.safeAreaInsets
+            topSafeAreaInset = safeAreaInsets.top
+            bottomSafeAreaInset = safeAreaInsets.bottom
         } else {
             topSafeAreaInset = rootController.topLayoutGuide.length
+            bottomSafeAreaInset = rootController.bottomLayoutGuide.length
         }
 
         //  Move positive = textField is hidden.
         //  Move negative = textField is showing.
         //  Calculating move position.
-        var move = min(textFieldViewRectInRootSuperview.minY - topSafeAreaInset, textFieldViewRectInWindow.maxY - (window.bounds.height - kbSize.height))
+        var bottomAdjustment = 0 as CGFloat
+        if superScrollView == nil && kbSize.height >= bottomSafeAreaInset {
+            bottomAdjustment = -bottomSafeAreaInset
+        }
+        var move = min(textFieldViewRectInRootSuperview.minY - topSafeAreaInset, textFieldViewRectInWindow.maxY - (window.bounds.height - kbSize.height) - bottomAdjustment)
 
         showLog("Need to move: \(move)")
-
-        var superScrollView: UIScrollView?
-        var superView = textFieldView.superview(of: UIScrollView.self)
-
-        //Getting UIScrollView whose scrolling is enabled.    //  (Bug ID: #285)
-        while let view = superView {
-
-            if view.isScrollEnabled, !view.shouldIgnoreScrollingAdjustment {
-                superScrollView = view
-                break
-            } else {
-                //  Getting it's superScrollView.   //  (Enhancement ID: #21, #24)
-                superView = view.superview(of: UIScrollView.self)
-            }
-        }
 
         //If there was a lastScrollView.    //  (Bug ID: #34)
         if let lastScrollView = lastScrollView {
@@ -567,6 +577,8 @@ public extension IQKeyboardManager {
                     var rect = rootController.view.frame
                     rect.origin = rootViewOrigin
                     rootController.view.frame = rect
+                    rootController.view.setNeedsLayout()
+                    rootController.view.layoutIfNeeded()
 
                     //Animating content if needed (Bug ID: #204)
                     if self.layoutIfNeededOnUpdate {
