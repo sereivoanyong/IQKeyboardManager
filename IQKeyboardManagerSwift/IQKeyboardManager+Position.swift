@@ -163,11 +163,24 @@ public extension IQKeyboardManager {
         guard hasPendingAdjustRequest,
             let textFieldView = textFieldView,
             let rootController = textFieldView.parentContainerViewController(),
-            let window = keyWindow(),
-            let textFieldViewRectInWindow = textFieldView.superview?.convert(textFieldView.frame, to: window),
-            let textFieldViewRectInRootSuperview = textFieldView.superview?.convert(textFieldView.frame, to: rootController.view?.superview) else {
+            let window = keyWindow() else {
                 return
         }
+
+      if #available(iOS 11.0, *), let navigationController = rootController.navigationController, navigationController.navigationBar.prefersLargeTitles {
+        let largeTitleDisplayMode = rootController.navigationItem.largeTitleDisplayMode
+        let hasLargeTitles = largeTitleDisplayMode == .always || (largeTitleDisplayMode == .automatic && navigationController.viewControllers[0].navigationItem.largeTitleDisplayMode != .never)
+        if hasLargeTitles {
+          print("View controller supporting large titles might behave incorrectly.")
+        }
+//        let largeTitleDisplayMode = rootController.navigationItem.largeTitleDisplayMode
+//        rootController.navigationItem.largeTitleDisplayMode = .never
+//        rootController.view.layoutIfNeeded()
+//        rootController.navigationItem.largeTitleDisplayMode = largeTitleDisplayMode
+      }
+
+        let textFieldViewRectInWindow = textFieldView.superview!.convert(textFieldView.frame, to: window)
+        let textFieldViewRectInRootSuperview = textFieldView.superview!.convert(textFieldView.frame, to: rootController.view?.superview)
 
         let startTime = CACurrentMediaTime()
         showLog("****** \(#function) started ******", indentation: 1)
@@ -198,24 +211,17 @@ public extension IQKeyboardManager {
             }
         }
 
-        let statusBarHeight: CGFloat
-
-        if #available(iOS 13, *) {
-            statusBarHeight = window.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        let topSafeAreaInset: CGFloat
+        if #available(iOS 11.0, *) {
+            topSafeAreaInset = rootController.view.safeAreaInsets.top
         } else {
-            statusBarHeight = UIApplication.shared.statusBarFrame.height
+            topSafeAreaInset = rootController.topLayoutGuide.length
         }
-
-        let navigationBarAreaHeight: CGFloat = statusBarHeight + ( rootController.navigationController?.navigationBar.frame.height ?? 0)
-        let layoutAreaHeight: CGFloat = rootController.view.layoutMargins.bottom
-
-        let topLayoutGuide: CGFloat = max(navigationBarAreaHeight, layoutAreaHeight) + 5
-        let bottomLayoutGuide: CGFloat = (textFieldView is UIScrollView && textFieldView.responds(to: #selector(getter: UITextView.isEditable))) ? 0 : rootController.view.layoutMargins.bottom  //Validation of textView for case where there is a tab bar at the bottom or running on iPhone X and textView is at the bottom.
 
         //  Move positive = textField is hidden.
         //  Move negative = textField is showing.
         //  Calculating move position.
-        var move: CGFloat = min(textFieldViewRectInRootSuperview.minY-(topLayoutGuide), textFieldViewRectInWindow.maxY-(window.frame.height-kbSize.height)+bottomLayoutGuide)
+        var move = min(textFieldViewRectInRootSuperview.minY - topSafeAreaInset, textFieldViewRectInWindow.maxY - (window.bounds.height - kbSize.height))
 
         showLog("Need to move: \(move)")
 
@@ -328,7 +334,7 @@ public extension IQKeyboardManager {
                 var shouldContinue = false
 
                 if move > 0 {
-                    shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.contentInset.top)
+                    shouldContinue =  move > (-scrollView.contentOffset.y - scrollView.adjustedContentInsetIfAvailable.top)
 
                 } else if let tableView = scrollView.superview(of: UITableView.self) {
 
@@ -340,7 +346,7 @@ public extension IQKeyboardManager {
                         if !previousCellRect.isEmpty {
                             let previousCellRectInRootSuperview = tableView.convert(previousCellRect, to: rootController.view.superview)
 
-                            move = min(0, previousCellRectInRootSuperview.maxY - topLayoutGuide)
+                            move = min(0, previousCellRectInRootSuperview.maxY - topSafeAreaInset)
                         }
                     }
                 } else if let collectionView = scrollView.superview(of: UICollectionView.self) {
@@ -353,15 +359,15 @@ public extension IQKeyboardManager {
                         if !previousCellRect.isEmpty {
                             let previousCellRectInRootSuperview = collectionView.convert(previousCellRect, to: rootController.view.superview)
 
-                            move = min(0, previousCellRectInRootSuperview.maxY - topLayoutGuide)
+                            move = min(0, previousCellRectInRootSuperview.maxY - topSafeAreaInset)
                         }
                     }
                 } else {
 
-                    shouldContinue = textFieldViewRectInRootSuperview.origin.y < topLayoutGuide
+                    shouldContinue = textFieldViewRectInRootSuperview.origin.y < topSafeAreaInset
 
                     if shouldContinue {
-                        move = min(0, textFieldViewRectInRootSuperview.origin.y - topLayoutGuide)
+                        move = min(0, textFieldViewRectInRootSuperview.origin.y - topSafeAreaInset)
                     }
                 }
 
@@ -384,7 +390,7 @@ public extension IQKeyboardManager {
                     if let lastViewRect = lastView.superview?.convert(lastView.frame, to: scrollView) {
 
                         //Calculating the expected Y offset from move and scrollView's contentOffset.
-                        var shouldOffsetY = scrollView.contentOffset.y - min(scrollView.contentOffset.y, -move)
+                        var shouldOffsetY = scrollView.contentOffset.y - min(scrollView.contentOffset.y + scrollView.adjustedContentInsetIfAvailable.top, -move)
 
                         //Rearranging the expected Y offset according to the view.
                         shouldOffsetY = min(shouldOffsetY, lastViewRect.origin.y)
@@ -401,7 +407,7 @@ public extension IQKeyboardManager {
                             if let currentTextFieldViewRect = textFieldView.superview?.convert(textFieldView.frame, to: window) {
 
                                 //Calculating expected fix distance which needs to be managed from navigation bar
-                                let expectedFixDistance = currentTextFieldViewRect.minY - topLayoutGuide
+                                let expectedFixDistance = currentTextFieldViewRect.minY - topSafeAreaInset
 
                                 //Now if expectedOffsetY (superScrollView.contentOffset.y + expectedFixDistance) is lower than current shouldOffsetY, which means we're in a position where navigationBar up and hide, then reducing shouldOffsetY with expectedOffsetY (superScrollView.contentOffset.y + expectedFixDistance)
                                 shouldOffsetY = min(shouldOffsetY, scrollView.contentOffset.y + expectedFixDistance)
@@ -513,7 +519,7 @@ public extension IQKeyboardManager {
 
             let keyboardOverlapping = rootSuperViewFrameInWindow.maxY - keyboardYPosition
 
-            let textViewHeight = min(textView.frame.height, rootSuperViewFrameInWindow.height-topLayoutGuide-keyboardOverlapping)
+            let textViewHeight = min(textView.frame.height, rootSuperViewFrameInWindow.height-topSafeAreaInset-keyboardOverlapping)
 
             if textView.frame.size.height-textView.contentInset.bottom>textViewHeight {
                 //_isTextViewContentInsetChanged,  If frame is not change by library in past, then saving user textView properties  (Bug ID: #92)
@@ -651,4 +657,14 @@ public extension IQKeyboardManager {
 
         self.rootViewController = nil
     }
+}
+
+extension UIScrollView {
+
+  fileprivate var adjustedContentInsetIfAvailable: UIEdgeInsets {
+    if #available(iOS 11.0, *) {
+      return adjustedContentInset
+    }
+    return contentInset
+  }
 }
